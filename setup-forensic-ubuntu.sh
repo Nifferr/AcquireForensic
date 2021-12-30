@@ -67,3 +67,11 @@ sudo cat /tmp/riplin0.pl | sed "s| c:\\\\perl\\\\bin\\\\perl.exe|`which perl`|" 
 sudo cat /tmp/riplin1.pl | sed 's|plugins\\\\|plugins/|' > riplin.pl
 # Make executable
 sudo chmod +x riplin.pl
+
+###################################################
+# Drive tools 
+###################################################
+apt-get install hdparm -y
+apt-get install smartmontools -y
+apt-get install lshw -y
+apt install inxi -y
