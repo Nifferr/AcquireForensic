@@ -9,6 +9,8 @@
 ###################################################
 sudo apt-get -y install xmount
 sudo apt-get -y install virtualbox
+sudo apt-get -y install dc3dd
+sudo apt-get -y install lsscsi
 sudo apt-get -y install virtualbox-fuse
 sudo apt-get -y install afflib-tools
 sudo apt-get -y install libfuse-dev 
@@ -75,3 +77,5 @@ apt-get install hdparm -y
 apt-get install smartmontools -y
 apt-get install lshw -y
 apt install inxi -y
+apt install sdparm -y
+apt install hwinfo -y
