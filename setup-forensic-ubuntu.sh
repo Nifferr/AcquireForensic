@@ -4,7 +4,6 @@
 # on Ubuntu 
 ###################################################
 
-
 ###################################################
 # Disk Image tools 
 ###################################################
@@ -16,7 +15,6 @@ sudo apt-get -y install libfuse-dev
 sudo apt-get -y install fuse-utils
 sudo echo "user_allow_other" >> /etc/fuse.conf
 sudo chmod 644 /etc/fuse.conf
-
 
 ###################################################
 # Install log2timeline
