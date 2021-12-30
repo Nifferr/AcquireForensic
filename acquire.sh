@@ -336,48 +336,6 @@ evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' 
 
 echo "The current value of LBASectors is:" $LBASectors | tee -a $auditfile
 
-# if blocksize = 1048576 = read 2048 sectors at a time
-# if bocksize = 524288 = read 1024 sectors at a time
-# if blocksize = 262144 = read 512 sectors at a time
-# if blocksize = 131072 = read 256 sectors at a time
-# if blocksize = 65536 = read 128 sectors at a time
-# if blocksize = 32768 = read 64 sectors at a time
-# if blockszie = 16384 = read 32 sectors at a time
-# if blocksize = 8192 = read 16 sectors at a time 
-# if blocksize = 4096 = read 8 sectors at a time
-# if blocksize = 2048 = read 4 sectors at a time
-# if blocksize = 1024 = read 2 sectors at a time
-# if blocksize = 512 = read 1 sector at a time
-
-# As of version T0.3, comment out any sector count > 64 sectors
-
-# if ((($LBASectors % 2048) == 0)) 
-# then 
-# 	echo "	LBASectors is evenly divisible by 2048" | tee -a $auditfile
-# 	blocksize=1048576
-# 	echo "	blocksize is set to:" $blocksize | tee -a $auditfile
-# elif ((($LBASectors %1024) == 0))
-# then
-# 	echo "	LBASectors is evenly divisible by 1024" | tee -a $auditfile
-# 	blocksize=524288
-# 	echo "	blocksize is set to:" $blocksize | tee -a $auditfile
-# elif ((($LBASectors %512) == 0))
-# then
-# 	echo "	LBASectors is evenly divisible by 512" | tee -a $auditfile
-# 	blocksize=262144
-# 	echo "	blocksize is set to:" $blocksize | tee -a $auditfile
-# elif ((($LBASectors %256) == 0))
-# then
-# 	echo "	LBASectors is evenly divisible by 256" | tee -a $auditfile
-# 	blocksize=131072
-# 	echo "	blocksize is set to:" $blocksize | tee -a $auditfile
-# elif ((($LBASectors %128) == 0))
-# then
-# 	echo "	LBASectors is evenly divisible by 128" | tee -a $auditfile
-# 	blocksize=65536
-# 	echo "	blocksize is set to:" $blocksize | tee -a $auditfile
-#
-
 if ((($LBASectors %64) == 0))
 then
 	echo "LBASectors is evenly divisible by 64" | tee -a $auditfile
