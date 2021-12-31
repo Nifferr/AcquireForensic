@@ -479,9 +479,10 @@ else
 	echo
 	old_tgt_dev_serial = $tgt_dev_serial
 	old_tgt_scsi_serial = $tgt_scsi_serial
-	echo "** Please enter the real S/N in target"
-	echo -e "** the format 'Target Serial Number' 'Target Case HD S/N': \c "
-	read tgt_dev_serial tgt_scsi_serial
+	echo -e "** Please enter the S/N of the target: \c "
+	read tgt_dev_serial
+	echo -e "** Please enter the S/N in target case: \c "
+	read tgt_scsi_serial
 	echo
 fi
 echo "Firmware Revision: $tgt_dev_firmware" | tee -a $auditfile
@@ -525,16 +526,13 @@ then
 	echo | tee -a $auditfile
 	cat /proc/scsi/scsi  | grep -i host -A 1 | tee -a $auditfile
 	echo  | tee -a $auditfile
-	echo  | tee -a $auditfile
 	echo "********************* MOUNTED FILE SYSTEMS *******************" | tee -a $auditfile
 	echo | tee -a $auditfile
 	mount | tee -a $auditfile
 	echo | tee -a $auditfile
-	echo | tee -a $auditfile
 	echo "********************** AVAILABLE FREE SPACE ******************" | tee -a $auditfile
 	echo | tee -a $auditfile
 	df -h | tee -a $auditfile
-	echo | tee -a $auditfile
 	echo | tee -a $auditfile
 	echo "************** PLEASE REVIEW THE FOLLOWING INFORMATION : **************"
 	echo "Forensic Examiner Name: $firstname $lastname"
