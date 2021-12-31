@@ -11,12 +11,19 @@ sudo apt-get -y install xmount
 sudo apt-get -y install virtualbox
 sudo apt-get -y install dc3dd
 sudo apt-get -y install lsscsi
-sudo apt-get -y install virtualbox-fuse
 sudo apt-get -y install afflib-tools
 sudo apt-get -y install libfuse-dev 
 sudo apt-get -y install fuse-utils
 sudo echo "user_allow_other" >> /etc/fuse.conf
 sudo chmod 644 /etc/fuse.conf
+
+###################################################
+# Virtualization 
+###################################################
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt-get update && sudo apt-get install vagrant
+sudo apt-get -y install virtualbox-fuse
 
 ###################################################
 # Install log2timeline
