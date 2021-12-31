@@ -1,5 +1,6 @@
-	curr_date=`date +"%A, %B %d, %Y"`
-	curr_time=`date +"%H:%M"`
+	
+curr_date=`date +"%A, %B %d, %Y"`
+curr_time=`date +"%H:%M"`
 timezone_host=`date +"%:::z %Z"`
 host_type=`dmidecode -t 3 | grep Type | awk '{print $2}'`
 host_manufacturer=`dmidecode -s system-manufacturer`
