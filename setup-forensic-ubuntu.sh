@@ -29,7 +29,7 @@ sudo apt-get -y install virtualbox-fuse
 # Install log2timeline
 ###################################################
 wget https://log2timeline.googlecode.com/files/log2timeline_0.65.tgz
-OR
+#OR
 sudo nano -w /etc/apt/sources.list
 deb http://log2timeline.net/pub/ lucid main
 wget -q http://log2timeline.net/gpg.asc -O- | sudo apt-key add -
@@ -37,13 +37,13 @@ sudo apt-get update
 sudo apt-get install log2timeline-perl
 
 ###################################################
-# Vinetto is a forensics tool to examine Thumbs.db files
+# Vinetto is a forensics tool to examine Thumbs.db 
+# files
 ###################################################
 sudo apt-get install vinetto
 
 ###################################################
-# Install pasco
-# for Recovering IE History
+# Install pasco for Recovering IE History
 ###################################################
 sudo apt-get install pasco
 
