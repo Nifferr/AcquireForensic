@@ -72,10 +72,6 @@ fi
 clear
 # End of Datetime information
 
-# while [[ "$im_method" != "RAW" && "$im_method" != "E01" ]]
-# do
-# read im_method
-# done
 
 dmesg | grep logical | grep blocks
 fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,//g'
