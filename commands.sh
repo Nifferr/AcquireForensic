@@ -529,9 +529,9 @@ fi
 #Read individual values from pipe log
 
 # Define logs to store acquisition metadata
-metalog=$tgt_mnt/$evid_code/$evid_code.metalog.log
-metalog2=$tgt_mnt/$evid_code/$evid_code.metalog2.tsv
-metalog3=$tgt_mnt/$evid_code/$evid_code.metalog3.pipe
+info=$tgt_mnt/$evid_code/$evid_code.info.log
+info2=$tgt_mnt/$evid_code/$evid_code.info2.tsv
+info3=$tgt_mnt/$evid_code/$evid_code.info3.pipe
 
 # Write variables to seperate pipe log on multiple lines to facilitate reporting
 
@@ -540,11 +540,11 @@ metalog3=$tgt_mnt/$evid_code/$evid_code.metalog3.pipe
 # Write variables to seperate pipe delimited log on single line to facilitate importing to database
    
 
-# Write metalogs to backup image (if it exists)
+# Write infos to backup image (if it exists)
 if [ "$backup_drive" == "n" ]
 then
 else
-	cp $tgt_mnt/$evid_code/$evid_code.metalog* $bkup_mnt/$evid_code/
+	cp $tgt_mnt/$evid_code/$evid_code.info* $bkup_mnt/$evid_code/
 fi
 
 # beep five times to alert imager that the image is done

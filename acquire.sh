@@ -1232,146 +1232,146 @@ pdf_count=`grep "PDF|" $tgt_mnt/$evid_code/$evid_code.filetype_count.pipe | awk 
 pdf_size=`grep "PDF|" $tgt_mnt/$evid_code/$evid_code.filetype_count.pipe | awk -F "|" {'print $3'}`
 
 # Define logs to store acquisition metadata
-metalog=$tgt_mnt/$evid_code/$evid_code.metalog.log
-metalog2=$tgt_mnt/$evid_code/$evid_code.metalog2.tsv
-metalog3=$tgt_mnt/$evid_code/$evid_code.metalog3.pipe
+info=$tgt_mnt/$evid_code/$evid_code.info.log
+info2=$tgt_mnt/$evid_code/$evid_code.info2.tsv
+info3=$tgt_mnt/$evid_code/$evid_code.info3.pipe
 
 # Write variables to seperate pipe log on multiple lines to facilitate reporting
-echo -e "auditfile|$auditfile" > $metalog
-echo -e "backup_drive|$backup_drive" >> $metalog
-echo -e "bios_date|$bios_date" >> $metalog
-echo -e "bios_time|$bios_time" >> $metalog
-echo -e "bkup_act_mnt|$bkup_act_mnt" >> $metalog
-echo -e "bkup_code|$bkup_code" >> $metalog
-echo -e "bkup_bytes|$bkup_bytes" >> $metalog
-echo -e "bkup_count|$bkup_count" >> $metalog
-echo -e "bkup_count2|$bkup_count2" >> $metalog
-echo -e "bkup_dev|$bkup_dev" >> $metalog
-echo -e "bkup_dev_firmware|$bkup_dev_firmware" >> $metalog
-echo -e "bkup_dev_id|$bkup_dev_id" >> $metalog
-echo -e "bkup_dev_model|$bkup_dev_model" >> $metalog
-echo -e "bkup_dev_serial|$bkup_dev_serial" >> $metalog
-echo -e "bkup_dev_serialOld|$bkup_dev_serialOld" >> $metalog
-echo -e "bkup_free|$bkup_free" >> $metalog
-echo -e "bkup_hash|$bkup_hash" >> $metalog
-echo -e "bkup_pw|$bkup_pw" >> $metalog
-echo -e "bkup_scsi_model|$bkup_scsi_model" >> $metalog
-echo -e "bkup_scsi_serial|$bkup_scsi_serial" >> $metalog
-echo -e "bkup_scsi_serialOld|$bkup_scsi_serialOld" >> $metalog
-echo -e "bkup_scsi_vendor|$bkup_scsi_vendor" >> $metalog
-echo -e "bkup_sectors|$bkup_sectors" >> $metalog
-echo -e "bkup_size|$bkup_size" >> $metalog
-echo -e "bkup_sn_match|$bkup_sn_match" >> $metalog
-echo -e "blocksize|$blocksize" >> $metalog
-echo -e "city|$city" >> $metalog
-echo -e "copy_date|$copy_date" >> $metalog
-echo -e "copy_time|$copy_time" >> $metalog
-echo -e "country|$country" >> $metalog
-echo -e "curr_date|$curr_date" >> $metalog
-echo -e "curr_time|$curr_time" >> $metalog
-echo -e "custodianFN|$custodianFN" >> $metalog
-echo -e "custodianLN|$custodianLN" >> $metalog
-echo -e "date_match|$date_match" >> $metalog
-echo -e "dbx_count|$dbx_count" >> $metalog
-echo -e "dbx_size|$dbx_size" >> $metalog
-echo -e "doc_count|$doc_count" >> $metalog
-echo -e "doc_size|$doc_size" >> $metalog
-echo -e "docx_count|$docx_count" >> $metalog
-echo -e "docx_size|$docx_size" >> $metalog
-echo -e "eng_code|$eng_code" >> $metalog
-echo -e "evid_code|$evid_code" >> $metalog
-echo -e "evid_bytes|$evid_bytes" >> $metalog
-echo -e "evid_count|$evid_count" >> $metalog
-echo -e "evid_count2|$evid_count2" >> $metalog
-echo -e "evid_dev|$evid_dev" >> $metalog
-echo -e "evid_dev_firmware|$evid_dev_firmware" >> $metalog
-echo -e "evid_dev_model|$evid_dev_model" >> $metalog
-echo -e "evid_dev_serial|$evid_dev_serial" >> $metalog
-echo -e "evid_hash|$evid_hash" >> $metalog
-echo -e "evid_offset1|$evid_offset1" >> $metalog
-echo -e "evid_offset2|$evid_offset2" >> $metalog
-echo -e "evid_part1_field2|$evid_part1_field2" >> $metalog
-echo -e "evid_part1_field3|$evid_part1_field3" >> $metalog
-echo -e "evid_part1_start|$evid_part1_start" >> $metalog
-echo -e "evid_part2_field2|$evid_part2_field2" >> $metalog
-echo -e "evid_part2_field3|$evid_part2_field3" >> $metalog
-echo -e "evid_part2_start|$evid_part2_start" >> $metalog
-echo -e "evid_part_count|$evid_part_count" >> $metalog
-echo -e "evid_sectors|$evid_sectors" >> $metalog
-echo -e "evid_size|$evid_size" >> $metalog
-echo -e "firstname|$firstname" >> $metalog
-echo -e "host_manufacturer|$host_manufacturer" >> $metalog
-echo -e "host_product_name|$host_product_name" >> $metalog
-echo -e "host_serial_number|$host_serial_number" >> $metalog
-echo -e "host_tag|$host_tag" >> $metalog
-echo -e "host_time|$host_time" >> $metalog
-echo -e "host_version|$host_version" >> $metalog
-echo -e "image_end_date|$image_end_date" >> $metalog
-echo -e "image_end_time|$image_end_time" >> $metalog
-echo -e "image_start_date|$image_start_date" >> $metalog
-echo -e "image_start_time|$image_start_time" >> $metalog
-echo -e "lastname|$lastname" >> $metalog
-echo -e "metalog|$metalog" >> $metalog
-echo -e "metalog2|$metalog2" >> $metalog
-echo -e "nsf_count|$nsf_count" >> $metalog
-echo -e "nsf_size|$nsf_size" >> $metalog
-echo -e "ost_count|$ost_count" >> $metalog
-echo -e "ost_size|$ost_size" >> $metalog
-echo -e "pdf_count|$pdf_count" >> $metalog
-echo -e "pdf_size|$pdf_size" >> $metalog
-echo -e "ppt_count|$ppt_count" >> $metalog
-echo -e "ppt_size|$ppt_size" >> $metalog
-echo -e "pptx_count|$pptx_count" >> $metalog
-echo -e "pptx_size|$pptx_size" >> $metalog
-echo -e "proj_name|$proj_name" >> $metalog
-echo -e "pst_count|$pst_count" >> $metalog
-echo -e "pst_size|$pst_size" >> $metalog
-echo -e "rsynclog|$rsynclog" >> $metalog
-echo -e "state|$state" >> $metalog
-echo -e "summaryfile|$summaryfile" >> $metalog
-echo -e "specific_location|$specific_location" >> $metalog
-echo -e "tgt_act_mnt|$tgt_act_mnt" >> $metalog
-echo -e "tgt_code|$tgt_code" >> $metalog
-echo -e "tgt_bytes|$tgt_bytes" >> $metalog
-echo -e "tgt_count|$tgt_count" >> $metalog
-echo -e "tgt_count2|$tgt_count2" >> $metalog
-echo -e "tgt_dev|$tgt_dev" >> $metalog
-echo -e "tgt_dev_firmware|$tgt_dev_firmware" >> $metalog
-echo -e "tgt_dev_id|$tgt_dev_id" >> $metalog
-echo -e "tgt_dev_model|$tgt_dev_model" >> $metalog
-echo -e "tgt_dev_serial|$tgt_dev_serial" >> $metalog
-echo -e "old_tgt_dev_serial|$old_tgt_dev_serial" >> $metalog
-echo -e "tgt_free|$tgt_free" >> $metalog
-echo -e "tgt_hash|$tgt_hash" >> $metalog
-echo -e "tgt_mnt|$tgt_mnt" >> $metalog
-echo -e "tgt_pw|$tgt_pw" >> $metalog
-echo -e "tgt_scsi_model|$tgt_scsi_model" >> $metalog
-echo -e "tgt_scsi_serial|$tgt_scsi_serial" >> $metalog
-echo -e "old_tgt_scsi_serial|$old_tgt_scsi_serial" >> $metalog
-echo -e "tgt_scsi_vendor|$tgt_scsi_vendor" >> $metalog
-echo -e "tgt_sectors|$tgt_sectors" >> $metalog
-echo -e "tgt_size|$tgt_size" >> $metalog
-echo -e "tgt_sn_match|$tgt_size" >> $metalog
-echo -e "xls_count|$xls_count" >> $metalog
-echo -e "xls_size|$xls_size" >> $metalog
-echo -e "xlsx_count|$xlsx_count" >> $metalog
-echo -e "xlsx_size|$xlsx_size" >> $metalog
+echo -e "auditfile|$auditfile" > $info
+echo -e "backup_drive|$backup_drive" >> $info
+echo -e "bios_date|$bios_date" >> $info
+echo -e "bios_time|$bios_time" >> $info
+echo -e "bkup_act_mnt|$bkup_act_mnt" >> $info
+echo -e "bkup_code|$bkup_code" >> $info
+echo -e "bkup_bytes|$bkup_bytes" >> $info
+echo -e "bkup_count|$bkup_count" >> $info
+echo -e "bkup_count2|$bkup_count2" >> $info
+echo -e "bkup_dev|$bkup_dev" >> $info
+echo -e "bkup_dev_firmware|$bkup_dev_firmware" >> $info
+echo -e "bkup_dev_id|$bkup_dev_id" >> $info
+echo -e "bkup_dev_model|$bkup_dev_model" >> $info
+echo -e "bkup_dev_serial|$bkup_dev_serial" >> $info
+echo -e "bkup_dev_serialOld|$bkup_dev_serialOld" >> $info
+echo -e "bkup_free|$bkup_free" >> $info
+echo -e "bkup_hash|$bkup_hash" >> $info
+echo -e "bkup_pw|$bkup_pw" >> $info
+echo -e "bkup_scsi_model|$bkup_scsi_model" >> $info
+echo -e "bkup_scsi_serial|$bkup_scsi_serial" >> $info
+echo -e "bkup_scsi_serialOld|$bkup_scsi_serialOld" >> $info
+echo -e "bkup_scsi_vendor|$bkup_scsi_vendor" >> $info
+echo -e "bkup_sectors|$bkup_sectors" >> $info
+echo -e "bkup_size|$bkup_size" >> $info
+echo -e "bkup_sn_match|$bkup_sn_match" >> $info
+echo -e "blocksize|$blocksize" >> $info
+echo -e "city|$city" >> $info
+echo -e "copy_date|$copy_date" >> $info
+echo -e "copy_time|$copy_time" >> $info
+echo -e "country|$country" >> $info
+echo -e "curr_date|$curr_date" >> $info
+echo -e "curr_time|$curr_time" >> $info
+echo -e "custodianFN|$custodianFN" >> $info
+echo -e "custodianLN|$custodianLN" >> $info
+echo -e "date_match|$date_match" >> $info
+echo -e "dbx_count|$dbx_count" >> $info
+echo -e "dbx_size|$dbx_size" >> $info
+echo -e "doc_count|$doc_count" >> $info
+echo -e "doc_size|$doc_size" >> $info
+echo -e "docx_count|$docx_count" >> $info
+echo -e "docx_size|$docx_size" >> $info
+echo -e "eng_code|$eng_code" >> $info
+echo -e "evid_code|$evid_code" >> $info
+echo -e "evid_bytes|$evid_bytes" >> $info
+echo -e "evid_count|$evid_count" >> $info
+echo -e "evid_count2|$evid_count2" >> $info
+echo -e "evid_dev|$evid_dev" >> $info
+echo -e "evid_dev_firmware|$evid_dev_firmware" >> $info
+echo -e "evid_dev_model|$evid_dev_model" >> $info
+echo -e "evid_dev_serial|$evid_dev_serial" >> $info
+echo -e "evid_hash|$evid_hash" >> $info
+echo -e "evid_offset1|$evid_offset1" >> $info
+echo -e "evid_offset2|$evid_offset2" >> $info
+echo -e "evid_part1_field2|$evid_part1_field2" >> $info
+echo -e "evid_part1_field3|$evid_part1_field3" >> $info
+echo -e "evid_part1_start|$evid_part1_start" >> $info
+echo -e "evid_part2_field2|$evid_part2_field2" >> $info
+echo -e "evid_part2_field3|$evid_part2_field3" >> $info
+echo -e "evid_part2_start|$evid_part2_start" >> $info
+echo -e "evid_part_count|$evid_part_count" >> $info
+echo -e "evid_sectors|$evid_sectors" >> $info
+echo -e "evid_size|$evid_size" >> $info
+echo -e "firstname|$firstname" >> $info
+echo -e "host_manufacturer|$host_manufacturer" >> $info
+echo -e "host_product_name|$host_product_name" >> $info
+echo -e "host_serial_number|$host_serial_number" >> $info
+echo -e "host_tag|$host_tag" >> $info
+echo -e "host_time|$host_time" >> $info
+echo -e "host_version|$host_version" >> $info
+echo -e "image_end_date|$image_end_date" >> $info
+echo -e "image_end_time|$image_end_time" >> $info
+echo -e "image_start_date|$image_start_date" >> $info
+echo -e "image_start_time|$image_start_time" >> $info
+echo -e "lastname|$lastname" >> $info
+echo -e "info|$info" >> $info
+echo -e "info2|$info2" >> $info
+echo -e "nsf_count|$nsf_count" >> $info
+echo -e "nsf_size|$nsf_size" >> $info
+echo -e "ost_count|$ost_count" >> $info
+echo -e "ost_size|$ost_size" >> $info
+echo -e "pdf_count|$pdf_count" >> $info
+echo -e "pdf_size|$pdf_size" >> $info
+echo -e "ppt_count|$ppt_count" >> $info
+echo -e "ppt_size|$ppt_size" >> $info
+echo -e "pptx_count|$pptx_count" >> $info
+echo -e "pptx_size|$pptx_size" >> $info
+echo -e "proj_name|$proj_name" >> $info
+echo -e "pst_count|$pst_count" >> $info
+echo -e "pst_size|$pst_size" >> $info
+echo -e "rsynclog|$rsynclog" >> $info
+echo -e "state|$state" >> $info
+echo -e "summaryfile|$summaryfile" >> $info
+echo -e "specific_location|$specific_location" >> $info
+echo -e "tgt_act_mnt|$tgt_act_mnt" >> $info
+echo -e "tgt_code|$tgt_code" >> $info
+echo -e "tgt_bytes|$tgt_bytes" >> $info
+echo -e "tgt_count|$tgt_count" >> $info
+echo -e "tgt_count2|$tgt_count2" >> $info
+echo -e "tgt_dev|$tgt_dev" >> $info
+echo -e "tgt_dev_firmware|$tgt_dev_firmware" >> $info
+echo -e "tgt_dev_id|$tgt_dev_id" >> $info
+echo -e "tgt_dev_model|$tgt_dev_model" >> $info
+echo -e "tgt_dev_serial|$tgt_dev_serial" >> $info
+echo -e "old_tgt_dev_serial|$old_tgt_dev_serial" >> $info
+echo -e "tgt_free|$tgt_free" >> $info
+echo -e "tgt_hash|$tgt_hash" >> $info
+echo -e "tgt_mnt|$tgt_mnt" >> $info
+echo -e "tgt_pw|$tgt_pw" >> $info
+echo -e "tgt_scsi_model|$tgt_scsi_model" >> $info
+echo -e "tgt_scsi_serial|$tgt_scsi_serial" >> $info
+echo -e "old_tgt_scsi_serial|$old_tgt_scsi_serial" >> $info
+echo -e "tgt_scsi_vendor|$tgt_scsi_vendor" >> $info
+echo -e "tgt_sectors|$tgt_sectors" >> $info
+echo -e "tgt_size|$tgt_size" >> $info
+echo -e "tgt_sn_match|$tgt_size" >> $info
+echo -e "xls_count|$xls_count" >> $info
+echo -e "xls_size|$xls_size" >> $info
+echo -e "xlsx_count|$xlsx_count" >> $info
+echo -e "xlsx_size|$xlsx_size" >> $info
 
 # Write variables to separete tsv log on single line to facilitate importing to database
-echo -e "auditfile\tbackup_drive\tbios_date\tbios_time\tbkup_act_mnt\tbkup_code\tbkup_bytes\tbkup_count\tbkup_count2\tbkup_dev\tbkup_dev_firmware\tbkup_dev_id\tbkup_dev_model\tbkup_dev_serial\tbkup_dev_serialOld\tbkup_free\tbkup_hash\tbkup_pw\tbkup_scsi_model\tbkup_scsi_serial\tbkup_scsi_serialOld\tbkup_scsi_vendor\tbkup_sectors\tbkup_size\tbkup_sn_match\tblocksize\tcity\tcopy_date\tcopy_time\tcountry\tcurr_date\tcurr_time\tcustodianFN\tcustodianLN\tdate_match\tdbx_count\tdbx_size\tdoc_count\tdoc_size\tdocx_count\tdocx_size\teng_code\tevid_code\tevid_bytes\tevid_count\tevid_count2\tevid_dev\tevid_dev_firmware\tevid_dev_model\tevid_dev_serial\tevid_hash\tevid_offset1\tevid_offset2\tevid_part1_field2\tevid_part1_field3\tevid_part1_start\tevid_part2_field2\tevid_part2_field3\tevid_part2_start\tevid_part_count\tevid_sectors\tevid_size\tfirstname\thost_manufacturer\thost_product_name\thost_serial_number\thost_tag\thost_time\thost_version\timage_end_date\timage_end_time\timage_start_date\timage_start_time\tlastname\tmetalog\tmetalog2\tnsf_count\tnsf_size\tost_count\tost_size\tpdf_count\tpdf_size\tppt_count\tppt_size\tpptx_count\tpptx_size\tproj_name\tpst_count\tpst_size\trsynclog\tstate\tsummaryfile\tspecific_location\ttgt_act_mnt\ttgt_code\ttgt_bytes\ttgt_count\ttgt_count2\ttgt_dev\ttgt_dev_firmware\ttgt_dev_id\ttgt_dev_model\ttgt_dev_serial\told_tgt_dev_serial\ttgt_free\ttgt_hash\ttgt_mnt\ttgt_pw\ttgt_scsi_model\ttgt_scsi_serial\told_tgt_scsi_serial\ttgt_scsi_vendor\ttgt_sectors\ttgt_size\ttgt_sn_match\txls_count\txls_size\txlsx_count\txlsx_size" > $metalog2
-echo -e "$auditfile\t$backup_drive\t$bios_date\t$bios_time\t$bkup_act_mnt\t$bkup_code\t$bkup_bytes\t$bkup_count\t$bkup_count2\t$bkup_dev\t$bkup_dev_firmware\t$bkup_dev_id\t$bkup_dev_model\t$bkup_dev_serial\t$bkup_dev_serialOld\t$bkup_free\t$bkup_hash\t$bkup_pw\t$bkup_scsi_model\t$bkup_scsi_serial\t$bkup_scsi_serialOld\t$bkup_scsi_vendor\t$bkup_sectors\t$bkup_size\t$bkup_sn_match\t$blocksize\t$city\t$copy_date\t$copy_time\t$country\t$curr_date\t$curr_time\t$custodianFN\t$custodianLN\t$date_match\t$dbx_count\t$dbx_size\t$doc_count\t$doc_size\t$docx_count\t$docx_size\t$eng_code\t$evid_code\t$evid_bytes\t$evid_count\t$evid_count2\t$evid_dev\t$evid_dev_firmware\t$evid_dev_model\t$evid_dev_serial\t$evid_hash\t$evid_offset1\t$evid_offset2\t$evid_part1_field2\t$evid_part1_field3\t$evid_part1_start\t$evid_part2_field2\t$evid_part2_field3\t$evid_part2_start\t$evid_part_count\t$evid_sectors\t$evid_size\t$firstname\t$host_manufacturer\t$host_product_name\t$host_serial_number\t$host_tag\t$host_time\t$host_version\t$image_end_date\t$image_end_time\t$image_start_date\t$image_start_time\t$lastname\t$metalog\t$metalog2\t$nsf_count\t$nsf_size\t$ost_count\t$ost_size\t$pdf_count\t$pdf_size\t$ppt_count\t$ppt_size\t$pptx_count\t$pptx_size\t$proj_name\t$pst_count\t$pst_size\t$rsynclog\t$state\t$summaryfile\t$specific_location\t$tgt_act_mnt\t$tgt_code\t$tgt_bytes\t$tgt_count\t$tgt_count2\t$tgt_dev\t$tgt_dev_firmware\t$tgt_dev_id\t$tgt_dev_model\t$tgt_dev_serial\t$old_tgt_dev_serial\t$tgt_free\t$tgt_hash\t$tgt_mnt\t$tgt_pw\t$tgt_scsi_model\t$tgt_scsi_serial\t$old_tgt_scsi_serial\t$tgt_scsi_vendor\t$tgt_sectors\t$tgt_size\t$tgt_sn_match\t$xls_count\t$xls_size\t$xlsx_count\t$xlsx_size" >> $metalog2
+echo -e "auditfile\tbackup_drive\tbios_date\tbios_time\tbkup_act_mnt\tbkup_code\tbkup_bytes\tbkup_count\tbkup_count2\tbkup_dev\tbkup_dev_firmware\tbkup_dev_id\tbkup_dev_model\tbkup_dev_serial\tbkup_dev_serialOld\tbkup_free\tbkup_hash\tbkup_pw\tbkup_scsi_model\tbkup_scsi_serial\tbkup_scsi_serialOld\tbkup_scsi_vendor\tbkup_sectors\tbkup_size\tbkup_sn_match\tblocksize\tcity\tcopy_date\tcopy_time\tcountry\tcurr_date\tcurr_time\tcustodianFN\tcustodianLN\tdate_match\tdbx_count\tdbx_size\tdoc_count\tdoc_size\tdocx_count\tdocx_size\teng_code\tevid_code\tevid_bytes\tevid_count\tevid_count2\tevid_dev\tevid_dev_firmware\tevid_dev_model\tevid_dev_serial\tevid_hash\tevid_offset1\tevid_offset2\tevid_part1_field2\tevid_part1_field3\tevid_part1_start\tevid_part2_field2\tevid_part2_field3\tevid_part2_start\tevid_part_count\tevid_sectors\tevid_size\tfirstname\thost_manufacturer\thost_product_name\thost_serial_number\thost_tag\thost_time\thost_version\timage_end_date\timage_end_time\timage_start_date\timage_start_time\tlastname\tinfo\tinfo2\tnsf_count\tnsf_size\tost_count\tost_size\tpdf_count\tpdf_size\tppt_count\tppt_size\tpptx_count\tpptx_size\tproj_name\tpst_count\tpst_size\trsynclog\tstate\tsummaryfile\tspecific_location\ttgt_act_mnt\ttgt_code\ttgt_bytes\ttgt_count\ttgt_count2\ttgt_dev\ttgt_dev_firmware\ttgt_dev_id\ttgt_dev_model\ttgt_dev_serial\told_tgt_dev_serial\ttgt_free\ttgt_hash\ttgt_mnt\ttgt_pw\ttgt_scsi_model\ttgt_scsi_serial\told_tgt_scsi_serial\ttgt_scsi_vendor\ttgt_sectors\ttgt_size\ttgt_sn_match\txls_count\txls_size\txlsx_count\txlsx_size" > $info2
+echo -e "$auditfile\t$backup_drive\t$bios_date\t$bios_time\t$bkup_act_mnt\t$bkup_code\t$bkup_bytes\t$bkup_count\t$bkup_count2\t$bkup_dev\t$bkup_dev_firmware\t$bkup_dev_id\t$bkup_dev_model\t$bkup_dev_serial\t$bkup_dev_serialOld\t$bkup_free\t$bkup_hash\t$bkup_pw\t$bkup_scsi_model\t$bkup_scsi_serial\t$bkup_scsi_serialOld\t$bkup_scsi_vendor\t$bkup_sectors\t$bkup_size\t$bkup_sn_match\t$blocksize\t$city\t$copy_date\t$copy_time\t$country\t$curr_date\t$curr_time\t$custodianFN\t$custodianLN\t$date_match\t$dbx_count\t$dbx_size\t$doc_count\t$doc_size\t$docx_count\t$docx_size\t$eng_code\t$evid_code\t$evid_bytes\t$evid_count\t$evid_count2\t$evid_dev\t$evid_dev_firmware\t$evid_dev_model\t$evid_dev_serial\t$evid_hash\t$evid_offset1\t$evid_offset2\t$evid_part1_field2\t$evid_part1_field3\t$evid_part1_start\t$evid_part2_field2\t$evid_part2_field3\t$evid_part2_start\t$evid_part_count\t$evid_sectors\t$evid_size\t$firstname\t$host_manufacturer\t$host_product_name\t$host_serial_number\t$host_tag\t$host_time\t$host_version\t$image_end_date\t$image_end_time\t$image_start_date\t$image_start_time\t$lastname\t$info\t$info2\t$nsf_count\t$nsf_size\t$ost_count\t$ost_size\t$pdf_count\t$pdf_size\t$ppt_count\t$ppt_size\t$pptx_count\t$pptx_size\t$proj_name\t$pst_count\t$pst_size\t$rsynclog\t$state\t$summaryfile\t$specific_location\t$tgt_act_mnt\t$tgt_code\t$tgt_bytes\t$tgt_count\t$tgt_count2\t$tgt_dev\t$tgt_dev_firmware\t$tgt_dev_id\t$tgt_dev_model\t$tgt_dev_serial\t$old_tgt_dev_serial\t$tgt_free\t$tgt_hash\t$tgt_mnt\t$tgt_pw\t$tgt_scsi_model\t$tgt_scsi_serial\t$old_tgt_scsi_serial\t$tgt_scsi_vendor\t$tgt_sectors\t$tgt_size\t$tgt_sn_match\t$xls_count\t$xls_size\t$xlsx_count\t$xlsx_size" >> $info2
 
 # Write variables to seperate pipe delimited log on single line to facilitate importing to database
-echo -e "auditfile|backup_drive|bios_date|bios_time|bkup_act_mnt|bkup_code|bkup_bytes|bkup_count|bkup_count2|bkup_dev|bkup_dev_firmware|bkup_dev_id|bkup_dev_model|bkup_dev_serial|bkup_dev_serialOld|bkup_free|bkup_hash|bkup_pw|bkup_scsi_model|bkup_scsi_serial|bkup_scsi_serialOld|bkup_scsi_vendor|bkup_sectors|bkup_size|bkup_sn_match|blocksize|city|copy_date|copy_time|country|curr_date|curr_time|custodianFN|custodianLN|date_match|dbx_count|dbx_size|doc_count|doc_size|docx_count|docx_size|eng_code|evid_code|evid_bytes|evid_count|evid_count2|evid_dev|evid_dev_firmware|evid_dev_model|evid_dev_serial|evid_hash|evid_offset1|evid_offset2|evid_part1_field2|evid_part1_field3|evid_part1_start|evid_part2_field2|evid_part2_field3|evid_part2_start|evid_part_count|evid_sectors|evid_size|firstname|host_manufacturer|host_product_name|host_serial_number|host_tag|host_time|host_version|image_end_date|image_end_time|image_start_date|image_start_time|lastname|metalog|metalog2|nsf_count|nsf_size|ost_count|ost_size|pdf_count|pdf_size|ppt_count|ppt_size|pptx_count|pptx_size|proj_name|pst_count|pst_size|rsynclog|state|summaryfile|specific_location|tgt_act_mnt|tgt_code|tgt_bytes|tgt_count|tgt_count2|tgt_dev|tgt_dev_firmware|tgt_dev_id|tgt_dev_model|tgt_dev_serial|old_tgt_dev_serial|tgt_free|tgt_hash|tgt_mnt|tgt_pw|tgt_scsi_model|tgt_scsi_serial|old_tgt_scsi_serial|tgt_scsi_vendor|tgt_sectors|tgt_size|tgt_sn_match|xls_count|xls_size|xlsx_count|xlsx_size" > $metalog3
-echo -e "$auditfile|$backup_drive|$bios_date|$bios_time|$bkup_act_mnt|$bkup_code|$bkup_bytes|$bkup_count|$bkup_count2|$bkup_dev|$bkup_dev_firmware|$bkup_dev_id|$bkup_dev_model|$bkup_dev_serial|$bkup_dev_serialOld|$bkup_free|$bkup_hash|$bkup_pw|$bkup_scsi_model|$bkup_scsi_serial|$bkup_scsi_serialOld|$bkup_scsi_vendor|$bkup_sectors|$bkup_size|$bkup_sn_match|$blocksize|$city|$copy_date|$copy_time|$country|$curr_date|$curr_time|$custodianFN|$custodianLN|$date_match|$dbx_count|$dbx_size|$doc_count|$doc_size|$docx_count|$docx_size|$eng_code|$evid_code|$evid_bytes|$evid_count|$evid_count2|$evid_dev|$evid_dev_firmware|$evid_dev_model|$evid_dev_serial|$evid_hash|$evid_offset1|$evid_offset2|$evid_part1_field2|$evid_part1_field3|$evid_part1_start|$evid_part2_field2|$evid_part2_field3|$evid_part2_start|$evid_part_count|$evid_sectors|$evid_size|$firstname|$host_manufacturer|$host_product_name|$host_serial_number|$host_tag|$host_time|$host_version|$image_end_date|$image_end_time|$image_start_date|$image_start_time|$lastname|$metalog|$metalog2|$nsf_count|$nsf_size|$ost_count|$ost_size|$pdf_count|$pdf_size|$ppt_count|$ppt_size|$pptx_count|$pptx_size|$proj_name|$pst_count|$pst_size|$rsynclog|$state|$summaryfile|$specific_location|$tgt_act_mnt|$tgt_code|$tgt_bytes|$tgt_count|$tgt_count2|$tgt_dev|$tgt_dev_firmware|$tgt_dev_id|$tgt_dev_model|$tgt_dev_serial|$old_tgt_dev_serial|$tgt_free|$tgt_hash|$tgt_mnt|$tgt_pw|$tgt_scsi_model|$tgt_scsi_serial|$old_tgt_scsi_serial|$tgt_scsi_vendor|$tgt_sectors|$tgt_size|$tgt_sn_match|$xls_count|$xls_size|$xlsx_count|$xlsx_size" >> $metalog3
+echo -e "auditfile|backup_drive|bios_date|bios_time|bkup_act_mnt|bkup_code|bkup_bytes|bkup_count|bkup_count2|bkup_dev|bkup_dev_firmware|bkup_dev_id|bkup_dev_model|bkup_dev_serial|bkup_dev_serialOld|bkup_free|bkup_hash|bkup_pw|bkup_scsi_model|bkup_scsi_serial|bkup_scsi_serialOld|bkup_scsi_vendor|bkup_sectors|bkup_size|bkup_sn_match|blocksize|city|copy_date|copy_time|country|curr_date|curr_time|custodianFN|custodianLN|date_match|dbx_count|dbx_size|doc_count|doc_size|docx_count|docx_size|eng_code|evid_code|evid_bytes|evid_count|evid_count2|evid_dev|evid_dev_firmware|evid_dev_model|evid_dev_serial|evid_hash|evid_offset1|evid_offset2|evid_part1_field2|evid_part1_field3|evid_part1_start|evid_part2_field2|evid_part2_field3|evid_part2_start|evid_part_count|evid_sectors|evid_size|firstname|host_manufacturer|host_product_name|host_serial_number|host_tag|host_time|host_version|image_end_date|image_end_time|image_start_date|image_start_time|lastname|info|info2|nsf_count|nsf_size|ost_count|ost_size|pdf_count|pdf_size|ppt_count|ppt_size|pptx_count|pptx_size|proj_name|pst_count|pst_size|rsynclog|state|summaryfile|specific_location|tgt_act_mnt|tgt_code|tgt_bytes|tgt_count|tgt_count2|tgt_dev|tgt_dev_firmware|tgt_dev_id|tgt_dev_model|tgt_dev_serial|old_tgt_dev_serial|tgt_free|tgt_hash|tgt_mnt|tgt_pw|tgt_scsi_model|tgt_scsi_serial|old_tgt_scsi_serial|tgt_scsi_vendor|tgt_sectors|tgt_size|tgt_sn_match|xls_count|xls_size|xlsx_count|xlsx_size" > $info3
+echo -e "$auditfile|$backup_drive|$bios_date|$bios_time|$bkup_act_mnt|$bkup_code|$bkup_bytes|$bkup_count|$bkup_count2|$bkup_dev|$bkup_dev_firmware|$bkup_dev_id|$bkup_dev_model|$bkup_dev_serial|$bkup_dev_serialOld|$bkup_free|$bkup_hash|$bkup_pw|$bkup_scsi_model|$bkup_scsi_serial|$bkup_scsi_serialOld|$bkup_scsi_vendor|$bkup_sectors|$bkup_size|$bkup_sn_match|$blocksize|$city|$copy_date|$copy_time|$country|$curr_date|$curr_time|$custodianFN|$custodianLN|$date_match|$dbx_count|$dbx_size|$doc_count|$doc_size|$docx_count|$docx_size|$eng_code|$evid_code|$evid_bytes|$evid_count|$evid_count2|$evid_dev|$evid_dev_firmware|$evid_dev_model|$evid_dev_serial|$evid_hash|$evid_offset1|$evid_offset2|$evid_part1_field2|$evid_part1_field3|$evid_part1_start|$evid_part2_field2|$evid_part2_field3|$evid_part2_start|$evid_part_count|$evid_sectors|$evid_size|$firstname|$host_manufacturer|$host_product_name|$host_serial_number|$host_tag|$host_time|$host_version|$image_end_date|$image_end_time|$image_start_date|$image_start_time|$lastname|$info|$info2|$nsf_count|$nsf_size|$ost_count|$ost_size|$pdf_count|$pdf_size|$ppt_count|$ppt_size|$pptx_count|$pptx_size|$proj_name|$pst_count|$pst_size|$rsynclog|$state|$summaryfile|$specific_location|$tgt_act_mnt|$tgt_code|$tgt_bytes|$tgt_count|$tgt_count2|$tgt_dev|$tgt_dev_firmware|$tgt_dev_id|$tgt_dev_model|$tgt_dev_serial|$old_tgt_dev_serial|$tgt_free|$tgt_hash|$tgt_mnt|$tgt_pw|$tgt_scsi_model|$tgt_scsi_serial|$old_tgt_scsi_serial|$tgt_scsi_vendor|$tgt_sectors|$tgt_size|$tgt_sn_match|$xls_count|$xls_size|$xlsx_count|$xlsx_size" >> $info3
    
 
-# Write metalogs to backup image (if it exists)
+# Write infos to backup image (if it exists)
 if [ "$backup_drive" == "n" ]
 then
 	echo ""
 else
-	cp $tgt_mnt/$evid_code/$evid_code.metalog* $bkup_mnt/$evid_code/
+	cp $tgt_mnt/$evid_code/$evid_code.info* $bkup_mnt/$evid_code/
 fi
 
 # beep five times to alert imager that the image is done
