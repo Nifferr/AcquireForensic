@@ -234,12 +234,12 @@ echo
 echo "Establishing audit file"
 echo
 
-auditfile=$tgt_mnt/$evid_code/$evid_code.`date +"%Y%m%d.%H%M%S"`.wri
-sysinfofull=$tgt_mnt/$evid_code/$evid_code.SystemFullInformation.wri
-diskauditfile=$tgt_mnt/$evid_code/$evid_code.DisksInformation.wri
+auditfile=$tgt_mnt/$evid_code/$evid_code.`date +"%Y%m%d.%H%M%S"`.rawimage.log
+sysinfofull=$tgt_mnt/$evid_code/$evid_code.SystemFullInformation.rawimage.log
+diskauditfile=$tgt_mnt/$evid_code/$evid_code.DisksInformation.rawimage.log
 
-# An example auditfile is ID.20150617.150617.wri
-# This represents the EvidenceID.YearMonthDay.HourMinuteSecond.wri
+# An example auditfile is ID.20150617.150617.rawimage.log
+# This represents the EvidenceID.YearMonthDay.HourMinuteSecond.rawimage.log
 
 # Note - from here out we append certain output to the auditfile using 'tee -a'
 # Without the -a option to 'append' to an existing file, tee creates a new file 
@@ -572,7 +572,7 @@ then
 #	echo | tee -a $auditfile
 
 	# Deleting any previous image files from aborted imaging sessions and hash logs with the same Evidence ID before writing new image files
-	rm -f $tgt_mnt/$evid_code/$evid_code.hash.log.wri
+	rm -f $tgt_mnt/$evid_code/$evid_code.hash.log.rawimage.log
 	rm -f $tgt_mnt/$evid_code/$evid_code.E*
 	
 	echo "ftkimager /dev/$evid_dev $tgt_mnt/$evid_code/$evid_code" | tee -a $auditfile
@@ -929,7 +929,7 @@ else
 #	echo | tee -a $auditfile
 
 	# Deleting any previous image files from aborted imaging sessions and hash logs with the same Evidence ID before writing new image files
-	rm -f $tgt_mnt/$evid_code/$evid_code.hash.log.wri
+	rm -f $tgt_mnt/$evid_code/$evid_code.hash.log.rawimage.log
 	rm -f $tgt_mnt/$evid_code/$evid_code.E*
 	
 	echo "ftkimager /dev/$evid_dev $tgt_mnt/$evid_code/$evid_code" | tee -a $auditfile
@@ -972,8 +972,8 @@ else
 	echo "Establishing rsync log to document copying imaging logs to backup drive" | tee -a $auditfile
 	echo
 
-	# An example rsync log is rsynclog.CFS-A00001.20091027.180345.wri
-	# This represents the Evidence IDNumber.YearMonthDay.HourMinuteSecond.wri
+	# An example rsync log is rsynclog.CFS-A00001.20091027.180345.rawimage.log
+	# This represents the Evidence IDNumber.YearMonthDay.HourMinuteSecond.rawimage.log
 	
 	# Note - from here out we append certain output to the rsync log using 'tee -a'
 	# Without the -a option to 'append' to an existing file, tee creates a new file 
@@ -1160,10 +1160,10 @@ else
 	echo "Establishing rsync log to document copying imaging logs to backup drive"
 	echo
 		
-	rsynclog=$bkup_mnt/$evid_code/$evid_code.rsynclog.`date +"%Y%m%d.%H%M%S"`.wri
+	rsynclog=$bkup_mnt/$evid_code/$evid_code.rsynclog.`date +"%Y%m%d.%H%M%S"`.rawimage.log
 
-	# An example rsync log is rsynclog.CFS-A00001.20091027.180345.wri
-	# This represents the Evidence IDNumber.YearMonthDay.HourMinuteSecond.wri
+	# An example rsync log is rsynclog.CFS-A00001.20091027.180345.rawimage.log
+	# This represents the Evidence IDNumber.YearMonthDay.HourMinuteSecond.rawimage.log
 	
 	# Note - from here out we append certain output to the rsync log using 'tee -a'
 	# Without the -a option to 'append' to an existing file, tee creates a new file 
