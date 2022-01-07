@@ -217,11 +217,6 @@ echo
 veracrypt --password=$tgt_pw --slot=1 /dev/$tgt_dev'2'
 tgt_mnt=/media/veracrypt1
 #
-## Uncomment if imaging to an unencrypted harddrive.
-## mkdir /mnt/target
-## ntfs-3g /dev/$tgt_dev'1' /mnt/target
-## tgt_mnt=/mnt/target
-#
 echo
 echo "Creating directory entry on the Target Drive to hold"
 echo "an image of $evid_code and a log of this process."
