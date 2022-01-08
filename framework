@@ -77,31 +77,8 @@ Choose an option:  "
     esac
 }
 
-mainmenu() {
-    echo -ne "
-$(magentaprint 'MAIN MENU')
-$(greenprint '1)') Acquire evidence
-$(redprint '0)') Exit
-Choose an option:  "
-    read -r ans
-    case $ans in
-    1)
-        submenu
-        mainmenu
-        ;;
-    0)
-        fn_bye
-        ;;
-    *)
-        fn_fail
-        ;;
-    esac
-}
 
-mainmenu
-
-
-
+fn_report() {
 curr_date=`date +"%A, %B %d, %Y"`
 curr_time=`date +"%H:%M"`
 timezone_host=`date +"%:::z %Z"`
@@ -130,14 +107,15 @@ echo "BIOS Time: $bios_time"
 echo "Host Date/Time/Time Zone: $host_time" 
 echo
 echo "Do you need change any information?"
-echo
-echo
+}
 
+fn_reporte() {
 evid_dev="sda"
 evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
 evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
 evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
 LBASectors=`hdparm -g /dev/$evid_dev | awk -F'[=,]' '{print $4}'`
+evid_transport=`sudo hdparm -I /dev/$evid_dev | grep "Transport:" | awk -F "          " '{print $2}'`
 evid_sectors=`echo $LBASectors | awk '{print $1}'`
 evid_bytes=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep bytes | awk '{print $5}'`
 evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
@@ -154,7 +132,47 @@ echo "Evidence device firmware: $evid_dev_firmware"
 echo "Evidence device sectors: $evid_dev_sectors" 
 echo "Evidence device bytes: $evid_dev_bytes" 
 echo "Evidence device size: $evid_dev_size" 
+echo "Evidence transport type: $evid_transport"
 echo "Sector LBA: $LBASectors sectors"
+echo
+echo "Do you need change any information?"
+}
+
+mainmenu() {
+    echo -ne "
+$(magentaprint 'MAIN MENU')
+$(greenprint '1)') Acquire evidence
+$(greenprint '2)') Report source
+$(greenprint '3)') Report evidence
+$(redprint '0)') Exit
+Choose an option:  "
+    read -r ans
+    case $ans in
+    1)
+        submenu
+        mainmenu
+        ;;
+    2)
+        fn_report
+        mainmenu
+        ;;
+    3)
+        fn_reporte
+        mainmenu
+        ;;
+    0)
+        fn_bye
+        ;;
+    *)
+        fn_fail
+        ;;
+    esac
+}
+
+mainmenu
+
+
+
 
 tgt_dev="sda"
 tgt_dev_model=`hdparm -I /dev/$tgt_dev | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
