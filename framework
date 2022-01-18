@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
-# framework with many functions to create a detailed report and generate a image
+# Clear the screen
+clear
+# Script to image devices with linux Distro
+# v2022.01.01
+# Updated January 2022
+# GPL 3.0
+#
+# Script developed to assist in Forensic collection and reports
+# With this script you will be able to achieve some goals:
+# 1) Get valuable information about the host
+# 2) Securely save image in encrypted disks
+# 3) Perform forensic imaging in various formats
+# 4) Receive a device collection report
+#
+# This script has a few assumptions:
+# 1) Use the custodian's computer as the imaging platform
+# 2) Use this script for device collection
+# 3) Have intermediate knowledge in Linux
+# 4) Have target and backup disks, preferably preformatted
+# 5) Use VeraCrypt encryption
 
 ### Colors ##
 ESC=$(printf '\033') RESET="${ESC}[0m" BLACK="${ESC}[30m" RED="${ESC}[31m"
@@ -18,24 +37,27 @@ fn_goodmorning() { echo; echo "Good morning."; }
 fn_bye() { echo "Bye bye."; exit 0; }
 fn_fail() { echo "Wrong option." exit 1; }
 
-sub-submenu() {
+forensic_framework() {
     echo -ne "
-$(yellowprint 'SUB-SUBMENU')
-$(greenprint '1)') GOOD MORNING
-$(greenprint '2)') GOOD AFTERNOON
-$(blueprint '3)') Go Back to SUBMENU
-$(magentaprint '4)') Go Back to MAIN MENU
+$(greenprint 'REPORT ACQUISITION')
+$(greenprint '1)') READ ME FIRST
+$(yellowprint '2)') START ACQUISITION THE INFORMATION
+$(blueprint '3)') GENERATE REPORT
+$(magentaprint '4)') CANCEL
 $(redprint '0)') Exit
 Choose an option:  "
     read -r ans
     case $ans in
     1)
         fn_goodmorning
-        sub-submenu
+        function_readme
+        forensic_framework
         ;;
     2)
-        fn_goodafternoon
-        sub-submenu
+        fn_getinfo
+        fn_output_getinfo
+        fn_report
+        fn_report_evidence
         ;;
     3)
         submenu
@@ -51,32 +73,6 @@ Choose an option:  "
         ;;
     esac
 }
-
-submenu() {
-    echo -ne "
-$(blueprint 'CMD1 SUBMENU')
-$(greenprint '1)') Acquisition information
-$(magentaprint '2)') Go Back to Main Menu
-$(redprint '0)') Exit
-Choose an option:  "
-    read -r ans
-    case $ans in
-    1)
-        sub-submenu
-        submenu
-        ;;
-    2)
-        menu
-        ;;
-    0)
-        fn_bye
-        ;;
-    *)
-        fn_fail
-        ;;
-    esac
-}
-
 
 fn_report() {
 curr_date=`date +"%A, %B %d, %Y"`
@@ -96,20 +92,23 @@ host_timeZone=`date +"%:::z %Z"`
 datetime_host=`date +"%4Y-%m-%d %H:%M %:::z %Z"`
 datetime_utc0=`date -u +"%4Y-%m-%d %H:%M %:::z %Z"`
 #host information
-echo "Host Type: $host_type" 
-echo "Host Manufacturer: $host_manufacturer" 
-echo "Host Product Name: $host_product_name" 
-echo "Host Tag: $host_tag" 
-echo "Host Version: $host_version" 
-echo "Host Serial Number: $host_serial_number" 
-echo "BIOS Date: $bios_date" 
-echo "BIOS Time: $bios_time" 
-echo "Host Date/Time/Time Zone: $host_time" 
+echo "******************************************"
+echo "*           Host Information             *"
+echo "******************************************"
 echo
-echo "Do you need change any information?"
+echo $(blueprint "Host Type:") $host_type 
+echo $(blueprint "Host Type:") $host_type
+echo $(blueprint "Host Manufacturer:") $host_manufacturer
+echo $(blueprint "Host Product Name:") $host_product_name 
+echo $(blueprint "Host Tag:") $host_tag
+echo $(blueprint "Host Version:") $host_version
+echo $(blueprint "Host Serial Number:") $host_serial_number
+echo $(blueprint "BIOS Date:") $bios_date
+echo $(blueprint "BIOS Time:") $bios_time 
+echo
 }
 
-fn_reporte() {
+fn_report_evidence() {
 evid_dev="sda"
 evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
 evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
@@ -125,124 +124,135 @@ evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev
 evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
 evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
 #evidence information
-echo "Evidence mount point: /dev/$evid_dev" 
-echo "Evidence device model: $evid_dev_model" 
-echo "Evidence device serial: $evid_dev_serial" 
-echo "Evidence device firmware: $evid_dev_firmware" 
-echo "Evidence device sectors: $evid_dev_sectors" 
-echo "Evidence device bytes: $evid_dev_bytes" 
-echo "Evidence device size: $evid_dev_size" 
-echo "Evidence transport type: $evid_transport"
-echo "Sector LBA: $LBASectors sectors"
+echo "******************************************"
+echo "*         Evidence Information           *"
+echo "******************************************"
 echo
-echo "Do you need change any information?"
+echo $(blueprint "Evidence mount point:") "/dev/$evid_dev" 
+echo $(blueprint "Evidence device model:") "$evid_dev_model" 
+echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
+echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
+echo $(blueprint "Evidence transport type:") "$evid_transport"
+echo
 }
 
-mainmenu() {
-    echo -ne "
-$(magentaprint 'MAIN MENU')
-$(greenprint '1)') Acquire evidence
-$(greenprint '2)') Report source
-$(greenprint '3)') Report evidence
-$(redprint '0)') Exit
-Choose an option:  "
-    read -r ans
-    case $ans in
-    1)
-        submenu
-        mainmenu
-        ;;
-    2)
-        fn_report
-        mainmenu
-        ;;
-    3)
-        fn_reporte
-        mainmenu
-        ;;
-    0)
-        fn_bye
-        ;;
-    *)
-        fn_fail
-        ;;
-    esac
+
+function_readme(){
+    echo "
+Script developed to assist in Forensic collection and reports
+With this script you will be able to achieve some goals:
+1) Get valuable information about the host
+2) Securely save image in encrypted disks
+3) Perform forensic imaging in various formats
+4) Receive a device collection report
+
+This script has a few assumptions:
+1) Use the custodian's computer as the imaging platform
+2) Use this script for device collection
+3) Have intermediate knowledge in Linux
+4) Have target and backup disks, preferably preformatted
+5) Use VeraCrypt encryption
+
+Dependencies to run this script:
+1) You must install this tools in your distribuition before 
+run:
+    inxi
+    smartctl
+    ftkimager
+    ddrescue
+    dc3dd 
+    " | more
 }
 
-mainmenu
+
+fn_output_getinfo(){
+clear
+echo "******************************************"
+echo "*        Acquisition Information         *"
+echo "******************************************"
+echo
+echo $(blueprint "First responder:")  $firstname $lastname
+echo $(blueprint "Custodian's name:") $custodianFN $custodianLN
+echo $(blueprint "Project Name:") $proj_name
+echo $(blueprint "Engagement Code (or TBD):") $eng_code
+echo $(blueprint "City:") $city1 $city2 $city3 $city4
+echo $(blueprint "State:") $state1 $state2 $state3 $state4
+echo $(blueprint "Country:") $country
+echo $(blueprint "Google Plus Code:") $specific_location
+echo $(blueprint "Asset Tag Host Information:") $host_tag
+echo
+}
+
+fn_getinfo(){
+clear
+teste="nada"
+echo -e "** Please enter YOUR First Name and your Last Name: \c "
+read firstname lastname
+echo -e "** Please enter the custodian's First Name and Last Name: \c "
+read custodianFN custodianLN
+echo -e "** Please enter the Project Name: \c "
+read proj_name
+echo -e "** Please enter the Engagement Code (or TBD): \c "
+read eng_code
+echo -e "** Please enter the city of acquisition: \c"
+read city1 city2 city3 city4
+echo -e "** Please enter the state of acquisition: \c "
+read state1 state2 state3 state4
+echo -e "** Please enter the country of acquisition: \c "
+read country
+echo -e "** Please enter Google Plus Code (or TBD): \c"
+read specific_location
+echo -e "** Please enter the Asset Tag Host Information (or N/A): \c "
+read host_tag
+echo
+}
+
+fn_acquire_e01(){
+    echo "************************************" | tee -a $auditfile
+	echo "* FTK Imager Forensic Preservation *" | tee -a $auditfile
+	echo "************************************" | tee -a $auditfile
+	echo | tee -a $auditfile
+	image_start_date=`date +"%A, %B %d, %Y"`
+	image_start_time=`date +"%H:%M"`
+	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
+    ftkimager /dev/$evid_dev $tgt_mnt/$evid_barcode/$evid_barcode --verify --no-sha1 --e01 --frag 2G --compress $compress_rate --case-number $evid_barcode --evidence-number $evid_barcode --examiner "$firstname $lastname"
+}
+fn_acquire_raw(){
+    echo "********************************" | tee -a $auditfile
+	echo "* DDC3DD Forensic Preservation *" | tee -a $auditfile
+	echo "********************************" | tee -a $auditfile
+	echo | tee -a $auditfile
+	image_start_date=`date +"%A, %B %d, %Y"`
+	image_start_time=`date +"%H:%M"`
+	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
+    dc3dd if=/dev/$evid_dev verb=on bufsz=$blocksize hash=md5 ofsz=2G hlog=$tgt_mnt/$evid_barcode/$evid_barcode.hash.log.wri log=$auditfile hofs=$tgt_mnt/$evid_barcode/$evid_barcode.image.111 hofs=$bkup_mnt/$evid_barcode/$evid_barcode.image.111
+}
+fn_acquire_aff(){
+    echo "**********************************" | tee -a $auditfile
+	echo "* DDRescue Forensic Preservation *" | tee -a $auditfile
+	echo "**********************************" | tee -a $auditfile
+	echo | tee -a $auditfile
+	image_start_date=`date +"%A, %B %d, %Y"`
+	image_start_time=`date +"%H:%M"`
+	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
+
+}
+fn_acquire_img(){
+	echo "**********************************" | tee -a $auditfile
+	echo "* DDRescue Forensic Preservation *" | tee -a $auditfile
+	echo "**********************************" | tee -a $auditfile
+	echo | tee -a $auditfile
+	image_start_date=`date +"%A, %B %d, %Y"`
+	image_start_time=`date +"%H:%M"`
+	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
+    ddrescue /dev/$evid_dev $tgt_mnt/$evid_barcode/$evid_barcode.img
+}
 
 
+fn_getdrives(){
+echo -e "** Please check the source, target and backup drives (eg. sda sdb sdc): \c "
+read host_tag
+echo
+}
 
-
-tgt_dev="sda"
-tgt_dev_model=`hdparm -I /dev/$tgt_dev | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
-tgt_dev_serial=`hdparm -I /dev/$tgt_dev | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
-tgt_dev_firmware=`hdparm -I /dev/$tgt_dev | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
-tgt_act_mnt=`df -h -P | grep $tgt_mnt | awk {'print $6'}`
-tgt_scsi_vendor=`cat /proc/scsi/scsi | grep -A 1 "scsi$tgt_dev_id" | grep "Vendor" | awk -F ':' '{print $2}'`
-tgt_scsi_model=`cat /proc/scsi/scsi | grep -A 1 "scsi$tgt_dev_id" | grep "Vendor" | awk -F ':' '{print $3}' | awk -F 'Rev' '{print $1}'`
-tgt_scsi_serial=`lshw -C Disk | grep -A 3 "/dev/$tgt_dev" | grep 'serial' | awk '{print $2}'`
-tgt_size=`fdisk -l -u /dev/$tgt_dev | grep Disk | grep $tgt_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
-tgt_free=`df -h -P | grep $tgt_mnt | awk {'print $4'}`
-#target information
-
-
-bkup_dev="sda"
-bkup_dev_model=`hdparm -I /dev/$bkup_dev | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
-bkup_dev_serial=`hdparm -I /dev/$bkup_dev | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
-bkup_dev_firmware=`hdparm -I /dev/$bkup_dev | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
-bkup_act_mnt=`df -h -P | grep $bkup_mnt | awk {'print $6'}`
-bkup_scsi_vendor=`cat /proc/scsi/scsi | grep -A 1 "scsi$bkup_dev_id" | grep "Vendor" | awk -F ':' '{print $2}'`
-bkup_scsi_model=`cat /proc/scsi/scsi | grep -A 1 "scsi$bkup_dev_id" | grep "Vendor" | awk -F ':' '{print $3}' | awk -F 'Rev' '{print $1}'`
-bkup_scsi_serial=`lshw -C Disk | grep -A 3 "/dev/$bkup_dev" | grep 'serial' | awk '{print $2}'`
-bkup_size=`fdisk -l -u /dev/$bkup_dev | grep Disk | grep $bkup_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
-bkup_free=`df -h -P | grep $bkup_mnt | awk {'print $4'}`
-#backup information
-
-#image_start_date=`date +"%A, %B %d, %Y"`
-#image_start_time=`date +"%H:%M"`
-#image_end_date=`ls -l -t $tgt_mnt/$evid_code/*.E* | head -1 | awk {'print $7'}`
-#image_end_time=`ls -l -t $tgt_mnt/$evid_code/*.E* | head -1 | awk {'print $8'}`
-#evid_hash=`cat $tgt_mnt/$evid_code/$evid_code.E01.txt | grep -i -A1 md5 | grep -i md5 | awk '{print $3}' | head -n1`
-#tgt_hash=`cat $tgt_mnt/$evid_code/$evid_code.E01.txt | grep -i -A1 md5 | grep -i md5 | awk '{print $3"\t"$5}' | tail -n1`
-#tgt_bytes=`cat $auditfile | grep copied | awk '{print $1}'`
-#tgt_sectors=`cat $auditfile | grep -A1 results | grep -A1 $tgt_mnt| grep sectors | awk '{print $1}'`
-#evid_count=`find /mnt/evidence -type f -print | wc -l`
-#tgt_count=`find /mnt/target_image -type f -print | wc -l`
-#evid_count2=`find /mnt/evidence2 -type f -print | wc -l`
-#tgt_count2=`find /mnt/target_image2 -type f -print | wc -l`
-#image_start_date=`date +"%A, %B %d, %Y"`
-#image_start_time=`date +"%H:%M"`
-#image_end_date=`ls -l -t $tgt_mnt/$evid_code/*.E* | head -1 | awk {'print $7'}`
-#image_end_time=`ls -l -t $tgt_mnt/$evid_code/*.E* | head -1 | awk {'print $8'}`
-#copy_date=`date +"%A, %B %d, %Y"`
-#copy_time=`date +"%H:%M"`
-#evid_hash=`cat $tgt_mnt/$evid_code/$evid_code.E01.txt | grep -i -A1 md5 | grep -i md5 | awk '{print $3}' | head -n1`
-#tgt_hash=`cat $tgt_mnt/$evid_code/$evid_code.E01.txt | grep -i -A1 md5 | grep -i md5 | awk '{print $3}' | tail -n1`
-#bkup_hash=`ewfinfo $bkup_mnt/$evid_code/$evid_code.E01 | grep -i -A1 md5 | awk '{print $2}' | head -n1`
-#tgt_bytes=`cat $auditfile | grep copied | awk '{print $1}'`
-#bkup_bytes=`cat $auditfile | grep copied | awk '{print $1}'`
-tgt_sectors=`cat $auditfile | grep -A1 results | grep -A1 $tgt_mnt| grep sectors | awk '{print $1}'`
-bkup_sectors=`cat $auditfile | grep -A1 results | grep -A1 $bkup_mnt| grep sectors | awk '{print $1}'`
-evid_count=`find /mnt/evidence -type f -print | wc -l`
-tgt_count=`find /mnt/target_image -type f -print | wc -l`
-bkup_count=`find /mnt/target_image -type f -print | wc -l`
-evid_count2=`find /mnt/evidence2 -type f -print | wc -l`
-tgt_count2=`find /mnt/target_image2 -type f -print | wc -l`
-bkup_count2=`find /mnt/target_image2 -type f -print | wc -l`
-copy_date=`date +"%A, %B %d, %Y"`
-copy_time=`date +"%H:%M"`
-#image information
-
-#report information
-echo "Forensic Examiner Name: $firstname $lastname"
-echo "Project Name: $proj_name"
-echo "Engagement Code: $eng_code"
-echo "Custodian Name: $custodianFN $custodianLN"
-echo "Current Date:" $curr_date
-echo "Current Time:" $curr_time
-echo "Specific Place of Acquisition: $specific_location - $city, $state, $country"
-echo "Timezone:  `date +'%:::z %Z'`"
-
-
-
+forensic_framework

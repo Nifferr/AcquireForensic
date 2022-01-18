@@ -53,6 +53,11 @@ sudo apt-get install pasco
 svn checkout http://jaygeeplayground.googlecode.com/svn/trunk/ lslink
 
 ###################################################
+#  Wireshark dependencies
+###################################################
+sudo apt install qttools5-dev qttools5-dev-tools libqt5svg5-dev qtmultimedia5-dev build-essential automake autoconf libgtk2.0-dev libglib2.0-dev flex bison libpcap-dev libgcrypt20-dev cmake -y
+
+###################################################
 # Regripper 
 ###################################################
 perl -MCPAN -e 'install Parse::Win32Registry'
