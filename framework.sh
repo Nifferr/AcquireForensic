@@ -58,12 +58,13 @@ Choose an option:  "
         fn_output_getinfo
         fn_report
         fn_report_evidence
+        forensic_framework
         ;;
     3)
-        submenu
+        forensic_framework
         ;;
     4)
-        mainmenu
+        fn_bye
         ;;
     0)
         fn_bye
@@ -97,7 +98,6 @@ echo "*           Host Information             *"
 echo "******************************************"
 echo
 echo $(blueprint "Host Type:") $host_type 
-echo $(blueprint "Host Type:") $host_type
 echo $(blueprint "Host Manufacturer:") $host_manufacturer
 echo $(blueprint "Host Product Name:") $host_product_name 
 echo $(blueprint "Host Tag:") $host_tag
@@ -123,6 +123,7 @@ evid_part1_field2=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev
 evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $3}'`
 evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
 evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
+trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
 #evidence information
 echo "******************************************"
 echo "*         Evidence Information           *"
@@ -133,6 +134,7 @@ echo $(blueprint "Evidence device model:") "$evid_dev_model"
 echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
 echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
 echo $(blueprint "Evidence transport type:") "$evid_transport"
+echo $(blueprint "Evidence trim status:") "$trim_status"
 echo
 }
 
