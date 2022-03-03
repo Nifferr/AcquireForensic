@@ -2,10 +2,16 @@
 # Clear the screen
 clear
 clear
-# Script to image devices with linux Distro
-# v2022.01.01
-# Updated January 2022
-# GPL 3.0
+# format_encription v2022.02.23
+# Updated Feb 2022
+#
+# Property of Nifferr
+# Script to image drives from distro
+#
+# Developed by Nicolas Ferreira
+# Fraud Investigation, Forensic Technology and Discovery Services
+# Computer Forensic Team BR
+#
 #
 # Script developed to assist in Forensic collection and reports
 # With this script you will be able to achieve some goals:
