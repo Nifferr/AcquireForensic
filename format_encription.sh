@@ -19,32 +19,26 @@ echo
 echo
 echo
 echo
-echo "************************** WARNING *********************************"
-echo "THIS SCRIPT CAN INADVERTENTLY FORMAT THE INTERNAL HARDDRIVE OF THE"
-echo "HOST COMPUTER. USE **EXTREME** CARE IN SELECTING DEVICE ASSIGNMENTS"
-echo "FOR FORMATTING.  DUE TO THE RISK OF ACCIDENTALLY SPECIFYING THE"
-echo "WRONG DEVICE, THIS SCRIPT SHOULD NOT BE RUN ON A CLIENT OR"
-echo "EVIDENCE COMPUTER AND *ONLY* ON A EY LAB SYSTEM"
-echo "********************************************************************"
+echo "************************** WARNING **********************************"
+echo "This script may inadvertently form the internal disk of your computer"
+echo " use *extreme care* when selecting devices"
+echo "*********************************************************************"
 echo
-echo "PRESS CTRL-C NOW IF YOU WISH TO ABORT!"
-echo
+echo "Press CTRL-C if you wish to abort!"
 while [[ "$prompt0" != "y" ]]
 do
 echo -e "** Please press 'y' when you are ready to continue: \c "
 read prompt0
 done
 clear
-clear
 echo
-echo "********************************************************************"
+echo "*********************************************************************"
 echo "Before running this script, please make sure the target disk(s) are"
-echo "Unallocated! Check 'Disks' if you have any doubts and contact a "
-echo "superior if needed."
+echo "Unallocated! Check 'Disks'"
 echo ""
 echo "This script will format up to FOUR drives attached to a computer and"
 echo "create VeraCrypt encrypted volumes on those drives."
-echo "********************************************************************"
+echo "*********************************************************************"
 echo
 echo "**PLEASE ATTACH THE HARDRIVES TO USB OR ESATA PORTS ON THE COMPUTER."
 echo

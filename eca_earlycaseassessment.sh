@@ -15,7 +15,7 @@ clear
 echo "**************************************************************************************"
 echo "To successfully run this report script, you must know the following basic information:"
 echo "A) Custodian Full Name"
-echo "B) BarCode assigned to the custodian's computer"
+echo "B) Evidence assigned to the custodian's computer"
 echo "C) Type of Device assigned custodian's host (Desktop or Laptop)"
 echo "**************************************************************************************"
 echo
@@ -32,15 +32,14 @@ echo "******************************************"
 echo "*     Enter Acquisition Information      *"
 echo "******************************************"
 echo
-echo
 echo -e "** Please enter custodian's name: \c "
 read custodian
 echo
 echo -e "** Please enter custodian's username: \c "
 read username
 echo
-echo -e "** Please enter the custodian's barcode: \c "
-read barcode
+echo -e "** Please enter the custodian's evidence: \c "
+read evidence
 echo
 echo -e "** Please enter the host type (Desktop or Laptop): \c "
 read device
@@ -55,7 +54,7 @@ read keynum
 mkdir /mnt/affuse"$keynum"
 mkdir /mnt/WindowsImage"$keynum"
 
-affuse /media/truecrypt"$keynum"/"$barcode"/"$barcode".image.001 /mnt/affuse"$keynum"
+affuse /media/truecrypt"$keynum"/"$evidence"/"$evidence".image.001 /mnt/affuse"$keynum"
 mmls /mnt/affuse"$keynum"/*
 
 echo
@@ -75,17 +74,14 @@ echo "2. Installed Softwares"
 echo "3. Recently Accessed Files"
 echo "4. Prefetch Files"
 echo
-echo
-echo
 echo "******************************************"
 echo "*      1. Basic System Information       *"
 echo "******************************************"
 echo
 echo "Custodian = "$custodian
-echo "Barcode = "$barcode
+echo "Evidence = "$evidence
 echo "Host = "$device
 perl /usr/share/regripper/rip.pl -r /mnt/WindowsImage1/Windows/System32/config/SOFTWARE -p winver 2> /dev/null | sed '1,3d'
-echo 
 echo 
 echo "User List"
 perl /usr/share/regripper/rip.pl -r /mnt/WindowsImage1/Windows/System32/config/SOFTWARE -p profilelist 2> /dev/null | sed '1,3d'
@@ -96,7 +92,6 @@ echo "*         2. Installed Softwares         *"
 echo "******************************************"
 echo
 perl /usr/share/regripper/rip.pl -r /mnt/WindowsImage1/Windows/System32/config/SOFTWARE -p product 2> /dev/null | sed '1,3d'
-echo
 perl /usr/share/regripper/rip.pl -r /mnt/WindowsImage1/Windows/System32/config/SOFTWARE -p uninstall 2> /dev/null | sed '1,3d'
 echo 
 echo 
@@ -106,7 +101,6 @@ echo "******************************************"
 echo
 echo "Recently Documents Accessed"
 perl /usr/share/regripper/rip.pl -r "/mnt/WindowsImage1/Users/$username/NTUSER.DAT" -p recentdocs 2> /dev/null | sed '1,3d'
-echo 
 echo "Recently URLs Accessed"
 perl /usr/share/regripper/rip.pl -r "/mnt/WindowsImage1/Users/$username/NTUSER.DAT" -p typedurls  2> /dev/null | sed '1,3d'
 echo

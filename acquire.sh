@@ -2,7 +2,7 @@
 # Clear the screen
 clear
 clear
-# format_encription v2022.02.23
+# acquire v2022.02.23
 # Updated Feb 2022
 #
 # Property of Nifferr
@@ -34,11 +34,13 @@ echo " B) Unique identifier assigned to the evidence - if not, we recommend usin
 echo " C) Linux device driver assigned to the hard drive of the custodian's computer."
 echo " D) Evidence IDs assigned to the destination (and Backup) drives where you will write the images"
 echo " E) Unique identifier assigned to the target and backup disks - if not, we recommend using a GUID"
-echo " F) You must have a USB or eSATA drive as Target and Backup Drive that is formatted in a readable filesystem"
-echo " G) You must have a USB or eSATA drive connected to the drives that is formatted in VeraCrypt 7.x"
-echo " Enough free space to keep a forensic image of the internal disk of this computer"
+echo " F) You must have a external drive as Target and Backup Drive that is formatted in a readable filesystem"
+echo " G) You must have connected drives formatted in VeraCrypt 1.24"
+echo " H) Enough free space to keep a forensic image of the internal disk of this computer"
 echo "*************************************************************************************"
 echo
+mkdir /mnt/tmp
+echo "Press CTRL-C if you want to abort anytime"
 while [[ "$prompt1" != "y" ]]
 do
 echo -e "** Please press 'y' when you are ready to continue: \c "
@@ -64,7 +66,7 @@ echo -e "** Please enter the Engagement Code (or TBD): \c "
 read eng_code
 #
 echo "** Please enter the city of acquisition"
-echo -e "   use underline character if location has a compound name (eg. Sao_Paulo): \c "
+echo -e "   use underline character if location has a compound name (eg. Sao Paulo): \c "
 read city
 echo -e "** Please enter the state of acquisition (eg. SP): \c "
 read state
@@ -107,7 +109,7 @@ then
 else
 	echo
 	echo "** Please enter today's current DATE in"
-	echo -e "** the format 'Tuesday, March 21, 2017': \c "
+	echo -e "** the format 'Saturday, March 05, 2022': \c "
 	read curr_date
 	echo
 fi
@@ -115,7 +117,7 @@ fi
 time_match="x"
 while [[ "$time_match" != "y" &&  "$time_match" != "n" ]]
 do
-#echo "debug: The current value of time_match is $time_match"
+
 echo
 echo
 echo "The current system TIME is:  `date +'%H:%M'`"
@@ -142,14 +144,6 @@ fi
 clear
 # End of Datetime information
 
-# while [[ "$im_method" != "RAW" && "$im_method" != "E01" ]]
-# do
-# echo 
-# echo    "     1) RAW image is make with DC3DD and no compression"
-# echo    "     2) E01 image is make with FTK and have compression"
-# echo -e "** Please enter the Image Method: RAW (prefered) or E01: \c "
-# read im_method
-# done
 
 echo
 echo "Displaying physical disk by device drive. Information from the host computer's hard disk(s) via the dmesg command."
@@ -159,7 +153,7 @@ echo "**************************************************************************
 echo
 echo "Displaying physical disk by device drive. Information from the host computer's hard disk(s) via the fdisk command."
 echo "*************************************************************************************"
-fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,//g'
+fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,/./g'
 echo "*************************************************************************************"
 echo
 echo
@@ -172,7 +166,7 @@ echo
 echo    "** Please enter the device driver for the Evidence Drive"
 echo -e "**                    (e.g. hda for IDE or sda for SATA): \c "
 read evid_dev
-echo
+
 echo -e "** Please enter the Evidence ID number for the Evidence Drive: \c "
 read evid_code
 echo
@@ -195,7 +189,7 @@ echo "**************************************************************************
 echo
 echo "Displaying disk device driver information of host computer hard drive(s) by fdisk command"
 echo "*************************************************************************************"
-fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,//g'
+fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,/./g'
 echo "*************************************************************************************"
 echo
 echo "Please make note of the device driver assigned to the target harddrive."
@@ -212,7 +206,7 @@ echo
 echo    "** Please enter the device driver for the Target Drive"
 echo -e "**    (e.g. hdb or hdc for IDE or sdb or sdc for SATA): \c "
 read tgt_dev
-echo
+
 echo -e "** Please enter the Evidence ID Number for the Target Drive: \c "
 read tgt_code
 echo
@@ -547,11 +541,11 @@ then
 	echo
 	echo 
 	echo "Drive Assignment Summary:" | tee -a $auditfile
-	echo -e "Drive\tEvidence ID\tDevice\tDisk_Size\tFree_Space\tMount_Point" > /home/$USER/t_summary
-	echo -e "Evidence\t$evid_code\t$evid_dev\t$evid_size\tN/A\tN/A" >> /home/$USER/t_summary
-	echo -e "Target\t$tgt_code\t$tgt_dev\t$tgt_size\t$tgt_free"B"\t$tgt_act_mnt" >> /home/$USER/t_summary
-	cat /home/$USER/t_summary | column -t | tee -a $auditfile
-	rm -f /home/$USER/t_summary
+	echo -e "Drive\tEvidence ID\tDevice\tDisk_Size\tFree_Space\tMount_Point" > /mnt/tmp/t_summary
+	echo -e "Evidence\t$evid_code\t$evid_dev\t$evid_size\tN/A\tN/A" >> /mnt/tmp/t_summary
+	echo -e "Target\t$tgt_code\t$tgt_dev\t$tgt_size\t$tgt_free"B"\t$tgt_act_mnt" >> /mnt/tmp/t_summary
+	cat /mnt/tmp/t_summary | column -t | tee -a $auditfile
+	rm -f /mnt/tmp/t_summary
 	echo 
 	echo "***********************************************************************"
 	while [[ "$prompt3" != "y" ]]
@@ -560,6 +554,15 @@ then
 	echo -e "If information is correct press 'y' to start imaging: \c"
 	read prompt3
 	done	
+	
+
+	# while [[ "$im_method" != "RAW" && "$im_method" != "E01" ]]
+	# do
+	# echo 
+	# echo    "     1) RAW image is make with DC3DD and no compression"
+	# echo    "     2) E01 image is make with FTK and have compression"
+	# echo -e "** Please enter the Image Method: RAW (prefered) or E01: \c "
+
 	echo | tee -a $auditfile
 	echo "*******************************" | tee -a $auditfile
 	echo "*  FTK Forensic Preservation  *" | tee -a $auditfile
@@ -587,7 +590,6 @@ then
 	echo "--examiner "$firstname $lastname"" | tee -a $auditfile
 	echo | tee -a $auditfile
 
-	
 	ftkimager /dev/$evid_dev $tgt_mnt/$evid_code/$evid_code --verify --no-sha1 --e01 --frag 2G --compress $compress_rate --case-number $evid_code --evidence-number $evid_code --examiner "$firstname $lastname"
 
 	echo
@@ -742,7 +744,7 @@ else
 	echo
 	echo "Displaying disk device driver information of host computer hard drive(s) by fdisk command"
 	echo "*************************************************************************************"
-	fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,//g'
+	fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "sd 0:0:0:0:\t["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,/./g'
 	echo "*************************************************************************************"
 	echo
 	echo "Please make note of the device driver assigned to the Backup harddrive."
@@ -904,12 +906,12 @@ else
 
 	echo 
 	echo "Drive Assignment Summary:" | tee -a $auditfile
-	echo -e "Drive\tEvidence ID\tDevice\tDisk_Size\tFree_Space\tMount_Point" > /home/$USER/t_summary
-	echo -e "Evidence\t$evid_code\t$evid_dev\t$evid_size\tN/A\tN/A" >> /home/$USER/t_summary
-	echo -e "Target\t$tgt_code\t$tgt_dev\t$tgt_size\t$tgt_free"B"\t$tgt_act_mnt" >> /home/$USER/t_summary
-	echo -e "Backup\t$bkup_code\t$bkup_dev\t$bkup_size\t$bkup_free"B"\t$bkup_act_mnt" >> /home/$USER/t_summary
-	cat /home/$USER/t_summary | column -t | tee -a $auditfile
-	rm -f /home/$USER/t_summary
+	echo -e "Drive\tEvidence ID\tDevice\tDisk_Size\tFree_Space\tMount_Point" > /mnt/tmp/t_summary
+	echo -e "Evidence\t$evid_code\t$evid_dev\t$evid_size\tN/A\tN/A" >> /mnt/tmp/t_summary
+	echo -e "Target\t$tgt_code\t$tgt_dev\t$tgt_size\t$tgt_free"B"\t$tgt_act_mnt" >> /mnt/tmp/t_summary
+	echo -e "Backup\t$bkup_code\t$bkup_dev\t$bkup_size\t$bkup_free"B"\t$bkup_act_mnt" >> /mnt/tmp/t_summary
+	cat /mnt/tmp/t_summary | column -t | tee -a $auditfile
+	rm -f /mnt/tmp/t_summary
 	echo 
 	echo "***********************************************************************"
 	while [[ "$prompt5" != "y" ]]
@@ -945,7 +947,7 @@ else
 	echo | tee -a $auditfile
 
 	
-	ftkimager /dev/$evid_dev $tgt_mnt/$evid_code/$evid_code --verify --no-sha1 --e01 --frag 2G --compress $compress_rate --case-number $evid_code --evidence-number $evid_code --examiner "$firstname $lastname"
+echo '	ftkimager /dev/$evid_dev $tgt_mnt/$evid_code/$evid_code --verify --no-sha1 --e01 --frag 2G --compress $compress_rate --case-number $evid_code --evidence-number $evid_code --examiner "$firstname $lastname"'
 
 	echo
 	echo "The version of FTK Imager used in this acquisition was:" | tee -a $auditfile
