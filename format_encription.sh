@@ -14,11 +14,6 @@ clear
 #
 #
 echo
-echo
-echo
-echo
-echo
-echo
 echo "************************** WARNING **********************************"
 echo "This script may inadvertently form the internal disk of your computer"
 echo " use *extreme care* when selecting devices"
@@ -34,13 +29,13 @@ clear
 echo
 echo "*********************************************************************"
 echo "Before running this script, please make sure the target disk(s) are"
-echo "Unallocated! Check 'Disks'"
-echo ""
+echo "Unallocated!"
+echo 
+echo "Please attach the hard drives to USB or eSATA port"
+echo
 echo "This script will format up to FOUR drives attached to a computer and"
 echo "create VeraCrypt encrypted volumes on those drives."
 echo "*********************************************************************"
-echo
-echo "**PLEASE ATTACH THE HARDRIVES TO USB OR ESATA PORTS ON THE COMPUTER."
 echo
 while [[ "$prompt1" != "y" ]]
 do
@@ -260,16 +255,16 @@ echo -e "[autorun]\r\nlabel=Evidence\r\nshellexecute=README.veracrypt.log" > /mn
 echo -e "[autorun]\r\nlabel=Evidence\r\nshellexecute=README.veracrypt.log" > /mnt/nt4/autorun.inf 2>/dev/null
 echo
 echo "Making autorun to the 100MB partition...."
-cp /home/ftds/Binaries/VeraCrypt_1.19.exe /mnt/nt1/VeraCrypt_1.19.exe 2>/dev/null
-cp /home/ftds/Binaries/VeraCrypt_1.19.exe /mnt/nt2/VeraCrypt_1.19.exe 2>/dev/null
-cp /home/ftds/Binaries/VeraCrypt_1.19.exe /mnt/nt3/VeraCrypt_1.19.exe 2>/dev/null
-cp /home/ftds/Binaries/VeraCrypt_1.19.exe /mnt/nt4/VeraCrypt_1.19.exe 2>/dev/null
+cp /home/ftds/Binaries/VeraCrypt_1.25.exe /mnt/nt1/VeraCrypt_1.25.exe 2>/dev/null
+cp /home/ftds/Binaries/VeraCrypt_1.25.exe /mnt/nt2/VeraCrypt_1.25.exe 2>/dev/null
+cp /home/ftds/Binaries/VeraCrypt_1.25.exe /mnt/nt3/VeraCrypt_1.25.exe 2>/dev/null
+cp /home/ftds/Binaries/VeraCrypt_1.25.exe /mnt/nt4/VeraCrypt_1.25.exe 2>/dev/null
 echo
 echo "Making sure we can write to the VeraCrypt partition...."
-echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on `date`." > /media/veracrypt1/format_time.txt 2>/dev/null
-echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on `date`." > /media/veracrypt2/format_time.txt 2>/dev/null
-echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on `date`." > /media/veracrypt3/format_time.txt 2>/dev/null
-echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on `date`." > /media/veracrypt4/format_time.txt 2>/dev/null
+echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on $date." > /media/veracrypt1/format_time.txt 2>/dev/null
+echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on $date." > /media/veracrypt2/format_time.txt 2>/dev/null
+echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on $date." > /media/veracrypt3/format_time.txt 2>/dev/null
+echo "Please check the FTDS evidence tracking to consulting more informations. Disk format assigned by $firstname $lastname on $date." > /media/veracrypt4/format_time.txt 2>/dev/null
 echo
 echo "Listing the files we just created...."
 ##ls -l /mnt/nt1/format_time.txt
@@ -311,7 +306,6 @@ sfdisk --part-type /dev/$fmt1_dev 2 16 2>/dev/null
 sfdisk --part-type /dev/$fmt2_dev 2 16 2>/dev/null
 sfdisk --part-type /dev/$fmt3_dev 2 16 2>/dev/null
 sfdisk --part-type /dev/$fmt4_dev 2 16 2>/dev/null
-
 
 echo "Done!"
 while [[ "$promptEnd" != "Close" ]]

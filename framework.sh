@@ -64,7 +64,8 @@ Choose an option:  "
         forensic_framework
         ;;
     4)
-        fn_bye
+        fn_report_evidence
+        forensic_framework
         ;;
     0)
         fn_bye
@@ -109,7 +110,10 @@ echo
 }
 
 fn_report_evidence() {
-evid_dev="sda"
+#evid_dev="sda"
+echo -e "** Please enter the mount point of drive (eg. sda, sdb, sdc): \c "
+read evid_dev
+
 evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
 evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
 evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
@@ -124,6 +128,7 @@ evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev
 evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
 evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
 trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
+
 #evidence information
 echo "******************************************"
 echo "*         Evidence Information           *"
@@ -137,6 +142,88 @@ echo $(blueprint "Evidence transport type:") "$evid_transport"
 echo $(blueprint "Evidence trim status:") "$trim_status"
 echo
 }
+
+fn_report_target() {
+#evid_dev="sda"
+echo -e "** Please enter the mount point of drive (eg. sda, sdb, sdc): \c "
+read evid_dev
+
+tgt_evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
+tgt_evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
+tgt_evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
+tgt_LBASectors=`hdparm -g /dev/$evid_dev | awk -F'[=,]' '{print $4}'`
+tgt_evid_transport=`sudo hdparm -I /dev/$evid_dev | grep "Transport:" | awk -F "          " '{print $2}'`
+tgt_evid_sectors=`echo $LBASectors | awk '{print $1}'`
+tgt_evid_bytes=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep bytes | awk '{print $5}'`
+tgt_evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
+tgt_evid_part_count=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep -v Disk | wc -l`
+tgt_evid_part1_field2=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $2}'`
+tgt_evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $3}'`
+tgt_evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
+tgt_evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
+tgt_trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
+
+#evidence information
+echo "******************************************"
+echo "*        Target Disk Information         *"
+echo "******************************************"
+echo
+echo $(blueprint "Evidence mount point:") "/dev/$evid_dev" 
+echo $(blueprint "Evidence device model:") "$evid_dev_model" 
+echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
+echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
+echo $(blueprint "Evidence transport type:") "$evid_transport"
+echo $(blueprint "Evidence trim status:") "$trim_status"
+echo
+}
+
+
+fn_report_target() {
+echo -e "** Please enter the mount point of backup drive (eg. sda, sdb, sdc): \c "
+read bkp_evid_dev
+
+bkp_evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
+bkp_evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
+bkp_evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
+bkp_LBASectors=`hdparm -g /dev/$evid_dev | awk -F'[=,]' '{print $4}'`
+bkp_evid_transport=`sudo hdparm -I /dev/$evid_dev | grep "Transport:" | awk -F "          " '{print $2}'`
+bkp_evid_sectors=`echo $LBASectors | awk '{print $1}'`
+bkp_evid_bytes=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep bytes | awk '{print $5}'`
+bkp_evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
+bkp_evid_part_count=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep -v Disk | wc -l`
+bkp_evid_part1_field2=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $2}'`
+bkp_evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $3}'`
+bkp_evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
+bkp_evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
+bkp_trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
+
+#backup information
+echo "******************************************"
+echo "*        Backup Disk Information         *"
+echo "******************************************"
+echo
+echo $(blueprint "Evidence mount point:") "/dev/$evid_dev" 
+echo $(blueprint "Evidence device model:") "$evid_dev_model" 
+echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
+echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
+echo $(blueprint "Evidence transport type:") "$evid_transport"
+echo $(blueprint "Evidence trim status:") "$trim_status"
+echo
+}
+
+
+
+
+fn_report_working() {}
+
+fn_report_target() {}
+fn_report_backup() {}
+fn_report_connected-devices() {}
+fn_report_mounted-filesystems() {}
+fn_report_available-freespace() {}
+
+fn_summary() {}
+
 
 
 function_readme(){
@@ -231,7 +318,7 @@ fn_acquire_raw(){
 }
 fn_acquire_aff(){
     echo "**********************************" | tee -a $auditfile
-	echo "* DDRescue Forensic Preservation *" | tee -a $auditfile
+	echo "*   AFF Forensic Preservation    *" | tee -a $auditfile
 	echo "**********************************" | tee -a $auditfile
 	echo | tee -a $auditfile
 	image_start_date=`date +"%A, %B %d, %Y"`
