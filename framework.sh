@@ -37,6 +37,8 @@ fn_goodmorning() { echo; echo "Good morning."; }
 fn_bye() { echo "Bye bye."; exit 0; }
 fn_fail() { echo "Wrong option." exit 1; }
 
+output_report=/home/Nifferr/report.log
+
 forensic_framework() {
     echo -ne "
 $(greenprint 'REPORT ACQUISITION')
@@ -55,12 +57,14 @@ Choose an option:  "
         ;;
     2)
         fn_getinfo
+        fn_get_diskinfo
         fn_output_getinfo
         fn_report
         fn_report_evidence
         forensic_framework
         ;;
     3)
+        fn_get_diskinfo
         forensic_framework
         ;;
     4)
@@ -111,35 +115,64 @@ echo
 
 fn_report_evidence() {
 #evid_dev="sda"
-echo -e "** Please enter the mount point of drive (eg. sda, sdb, sdc): \c "
-read evid_dev
-
-evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
-evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
+evid_dev_model=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_MODEL | awk  -F'[=,]' '{print $2}' | sed -n 1p`
+evid_dev_vendor=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_VENDOR | awk  -F'[=,]' '{print $2}' | sed -n 1p`
+evid_dev_serial=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_SERIAL_SHORT | awk  -F'[=,]' '{print $2}'`
 evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
 LBASectors=`hdparm -g /dev/$evid_dev | awk -F'[=,]' '{print $4}'`
-evid_transport=`sudo hdparm -I /dev/$evid_dev | grep "Transport:" | awk -F "          " '{print $2}'`
+evid_transport=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_BUS | awk  -F'[=,]' '{print $2}'`
 evid_sectors=`echo $LBASectors | awk '{print $1}'`
 evid_bytes=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep bytes | awk '{print $5}'`
-evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
+evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk '{print $3$4}'`
 evid_part_count=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep -v Disk | wc -l`
 evid_part1_field2=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $2}'`
 evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $3}'`
 evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
 evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
 trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
-
 #evidence information
 echo "******************************************"
 echo "*         Evidence Information           *"
 echo "******************************************"
 echo
 echo $(blueprint "Evidence mount point:") "/dev/$evid_dev" 
+echo $(blueprint "Evidence device vendor:") "$evid_dev_vendor" 
 echo $(blueprint "Evidence device model:") "$evid_dev_model" 
 echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
 echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
 echo $(blueprint "Evidence transport type:") "$evid_transport"
 echo $(blueprint "Evidence trim status:") "$trim_status"
+echo $(blueprint "Evidence sectors:") "$evid_sectors"
+echo $(blueprint "Evidence bytes:") "$evid_bytes"
+echo $(blueprint "Evidence size:") "$evid_size" 
+if ((($LBASectors %64) == 0))
+then
+	blocksize=32768
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %32) == 0))
+then
+	blocksize=16384
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %16) == 0))
+then
+	blocksize=8192
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %8) == 0))
+then
+	blocksize=4096
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %4) == 0))
+then
+	blocksize=2048
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %2) == 0))
+then
+	blocksize=1024
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+else
+	blocksize=512
+	echo $(blueprint "Evidence blocksize:") $blocksize | tee -a $output_report
+fi
 echo
 }
 
@@ -178,7 +211,27 @@ echo
 }
 
 
-fn_report_target() {
+fn_get_diskinfo() {
+echo "******************************************"
+echo "*           Disk Information             *"
+echo "******************************************"
+fdisk -l | grep bytes | grep Disk | grep -v veracrypt | grep -v ram | grep -v loop | awk '{print "["$2"]\t"$5" "$6"\t logical blocks: ("$3" "$4")"}' | sed 's/,/./g'
+echo "******************************************"
+echo
+echo -e "** Please enter the mount point of evidence drive (eg. sda): \c "
+read evid_dev
+echo -e "** Please enter the mount point of target drive (eg. sdb): \c "
+read target_dev
+echo -e "** Please enter the mount point of backup drive (eg. sdc): \c "
+read backup_dev
+}
+
+fn_encrypt() {
+    echo
+}
+
+
+fn_report_backup() {
 echo -e "** Please enter the mount point of backup drive (eg. sda, sdb, sdc): \c "
 read bkp_evid_dev
 
@@ -214,15 +267,30 @@ echo
 
 
 
-fn_report_working() {}
+fn_report_working() {
+    echo
+}
 
-fn_report_target() {}
-fn_report_backup() {}
-fn_report_connected-devices() {}
-fn_report_mounted-filesystems() {}
-fn_report_available-freespace() {}
+fn_report_target() {
+    echo
+}
+fn_report_backup() {
+    echo
+}
+fn_report_connected-devices() {
+    echo
+}
 
-fn_summary() {}
+fn_report_mounted-filesystems() {
+    echo
+}
+fn_report_available-freespace() {
+    echo
+}
+
+fn_summary() {
+    echo
+}
 
 
 
@@ -268,13 +336,11 @@ echo $(blueprint "City:") $city1 $city2 $city3 $city4
 echo $(blueprint "State:") $state1 $state2 $state3 $state4
 echo $(blueprint "Country:") $country
 echo $(blueprint "Google Plus Code:") $specific_location
-echo $(blueprint "Asset Tag Host Information:") $host_tag
 echo
 }
 
 fn_getinfo(){
 clear
-teste="nada"
 echo -e "** Please enter YOUR First Name and your Last Name: \c "
 read firstname lastname
 echo -e "** Please enter the custodian's First Name and Last Name: \c "
@@ -297,40 +363,40 @@ echo
 }
 
 fn_acquire_e01(){
-    echo "************************************" | tee -a $auditfile
-	echo "* FTK Imager Forensic Preservation *" | tee -a $auditfile
-	echo "************************************" | tee -a $auditfile
-	echo | tee -a $auditfile
+    echo "************************************" | tee -a $output_report
+	echo "* FTK Imager Forensic Preservation *" | tee -a $output_report
+	echo "************************************" | tee -a $output_report
+	echo | tee -a $output_report
 	image_start_date=`date +"%A, %B %d, %Y"`
 	image_start_time=`date +"%H:%M"`
 	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
     ftkimager /dev/$evid_dev $tgt_mnt/$evid_barcode/$evid_barcode --verify --no-sha1 --e01 --frag 2G --compress $compress_rate --case-number $evid_barcode --evidence-number $evid_barcode --examiner "$firstname $lastname"
 }
 fn_acquire_raw(){
-    echo "********************************" | tee -a $auditfile
-	echo "* DDC3DD Forensic Preservation *" | tee -a $auditfile
-	echo "********************************" | tee -a $auditfile
-	echo | tee -a $auditfile
+    echo "********************************" | tee -a $output_report
+	echo "* DDC3DD Forensic Preservation *" | tee -a $output_report
+	echo "********************************" | tee -a $output_report
+	echo | tee -a $output_report
 	image_start_date=`date +"%A, %B %d, %Y"`
 	image_start_time=`date +"%H:%M"`
 	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
-    dc3dd if=/dev/$evid_dev verb=on bufsz=$blocksize hash=md5 ofsz=2G hlog=$tgt_mnt/$evid_barcode/$evid_barcode.hash.log.wri log=$auditfile hofs=$tgt_mnt/$evid_barcode/$evid_barcode.image.111 hofs=$bkup_mnt/$evid_barcode/$evid_barcode.image.111
+    dc3dd if=/dev/$evid_dev verb=on bufsz=$blocksize hash=md5 ofsz=2G hlog=$tgt_mnt/$evid_barcode/$evid_barcode.hash.log.wri log=$output_report hofs=$tgt_mnt/$evid_barcode/$evid_barcode.image.111 hofs=$bkup_mnt/$evid_barcode/$evid_barcode.image.111
 }
 fn_acquire_aff(){
-    echo "**********************************" | tee -a $auditfile
-	echo "*   AFF Forensic Preservation    *" | tee -a $auditfile
-	echo "**********************************" | tee -a $auditfile
-	echo | tee -a $auditfile
+    echo "**********************************" | tee -a $output_report
+	echo "*   AFF Forensic Preservation    *" | tee -a $output_report
+	echo "**********************************" | tee -a $output_report
+	echo | tee -a $output_report
 	image_start_date=`date +"%A, %B %d, %Y"`
 	image_start_time=`date +"%H:%M"`
 	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."
 
 }
 fn_acquire_img(){
-	echo "**********************************" | tee -a $auditfile
-	echo "* DDRescue Forensic Preservation *" | tee -a $auditfile
-	echo "**********************************" | tee -a $auditfile
-	echo | tee -a $auditfile
+	echo "**********************************" | tee -a $output_report
+	echo "* DDRescue Forensic Preservation *" | tee -a $output_report
+	echo "**********************************" | tee -a $output_report
+	echo | tee -a $output_report
 	image_start_date=`date +"%A, %B %d, %Y"`
 	image_start_time=`date +"%H:%M"`
 	echo "Beginning the imaging process with DDRescue Imager on $image_start_date at $image_start_time."

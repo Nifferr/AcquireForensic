@@ -45,20 +45,17 @@ done
 echo
 echo "Waiting 3 seconds for the computer to recognize the harddrives."
 sleep 3
-echo
 echo "Displaying display driver information of all connected hard drive(s)"
 echo
 echo "********************************************************************"
-fdisk -l | grep '^Disk' | grep dev | grep -v ram
+fdisk -l | grep '^Disk' | grep dev | grep -v ram | grep -v loop
 echo "********************************************************************"
 echo
 echo    "** Please enter the device driver for the *FIRST* drive"
 echo -e "** you want to format (e.g. sdb or sdc): \c "
 read fmt1_dev
-echo
 echo -e "** Please enter your First Name and your Last Name: \c "
 read firstname lastname
-echo
 echo -e   "** Please enter password you wish to set for each VeraCrypt volume: \c "
 read fmt_pw
 echo
