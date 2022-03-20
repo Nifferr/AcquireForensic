@@ -69,6 +69,8 @@ Choose an option:  "
         ;;
     4)
         fn_report_evidence
+        fn_report_target
+        fn_report_backup
         forensic_framework
         ;;
     0)
@@ -114,7 +116,6 @@ echo
 }
 
 fn_report_evidence() {
-#evid_dev="sda"
 evid_dev_model=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_MODEL | awk  -F'[=,]' '{print $2}' | sed -n 1p`
 evid_dev_vendor=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_VENDOR | awk  -F'[=,]' '{print $2}' | sed -n 1p`
 evid_dev_serial=`/bin/udevadm info --name=/dev/$evid_dev | egrep ID_SERIAL_SHORT | awk  -F'[=,]' '{print $2}'`
@@ -177,36 +178,64 @@ echo
 }
 
 fn_report_target() {
-#evid_dev="sda"
-echo -e "** Please enter the mount point of drive (eg. sda, sdb, sdc): \c "
-read evid_dev
-
-tgt_evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
-tgt_evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
-tgt_evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
-tgt_LBASectors=`hdparm -g /dev/$evid_dev | awk -F'[=,]' '{print $4}'`
-tgt_evid_transport=`sudo hdparm -I /dev/$evid_dev | grep "Transport:" | awk -F "          " '{print $2}'`
-tgt_evid_sectors=`echo $LBASectors | awk '{print $1}'`
-tgt_evid_bytes=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep bytes | awk '{print $5}'`
-tgt_evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
-tgt_evid_part_count=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep -v Disk | wc -l`
-tgt_evid_part1_field2=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $2}'`
-tgt_evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $3}'`
-tgt_evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
-tgt_evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
-tgt_trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
-
-#evidence information
+tgt_dev_model=`/bin/udevadm info --name=/dev/$tgt_dev | egrep ID_MODEL | awk  -F'[=,]' '{print $2}' | sed -n 1p`
+tgt_dev_vendor=`/bin/udevadm info --name=/dev/$tgt_dev | egrep ID_VENDOR | awk  -F'[=,]' '{print $2}' | sed -n 1p`
+tgt_dev_serial=`/bin/udevadm info --name=/dev/$tgt_dev | egrep ID_SERIAL_SHORT | awk  -F'[=,]' '{print $2}'`
+tgt_dev_firmware=`hdparm -I /dev/$tgt_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
+LBASectors=`hdparm -g /dev/$tgt_dev | awk -F'[=,]' '{print $4}'`
+tgt_transport=`/bin/udevadm info --name=/dev/$tgt_dev | egrep ID_BUS | awk  -F'[=,]' '{print $2}'`
+tgt_sectors=`echo $LBASectors | awk '{print $1}'`
+tgt_bytes=`fdisk -l -u /dev/$tgt_dev | grep $tgt_dev | grep bytes | awk '{print $5}'`
+tgt_size=`fdisk -l -u /dev/$tgt_dev | grep Disk | grep $tgt_dev | awk '{print $3$4}'`
+tgt_part_count=`fdisk -l -u /dev/$tgt_dev | grep $tgt_dev | grep -v Disk | wc -l`
+tgt_part1_field2=`fdisk -l -u /dev/$tgt_dev | grep -A1 Device | grep $tgt_dev'1' | awk '{print $2}'`
+tgt_part1_field3=`fdisk -l -u /dev/$tgt_dev | grep -A1 Device | grep $tgt_dev'1' | awk '{print $3}'`
+tgt_part2_field2=`fdisk -l -u /dev/$tgt_dev | grep -A2 Device | grep $tgt_dev'2' | awk '{print $2}'`
+tgt_part2_field3=`fdisk -l -u /dev/$tgt_dev | grep -A2 Device | grep $tgt_dev'2' | awk '{print $3}'`
+trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
+#Target information
 echo "******************************************"
-echo "*        Target Disk Information         *"
+echo "*          Target Information            *"
 echo "******************************************"
 echo
-echo $(blueprint "Evidence mount point:") "/dev/$evid_dev" 
-echo $(blueprint "Evidence device model:") "$evid_dev_model" 
-echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
-echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
-echo $(blueprint "Evidence transport type:") "$evid_transport"
-echo $(blueprint "Evidence trim status:") "$trim_status"
+echo $(blueprint "Target mount point:") "/dev/$tgt_dev" 
+echo $(blueprint "Target device vendor:") "$tgt_dev_vendor" 
+echo $(blueprint "Target device model:") "$tgt_dev_model" 
+echo $(blueprint "Target device serial:") "$tgt_dev_serial" 
+echo $(blueprint "Target device firmware:") "$tgt_dev_firmware" 
+echo $(blueprint "Target transport type:") "$tgt_transport"
+echo $(blueprint "Target trim status:") "$trim_status"
+echo $(blueprint "Target sectors:") "$tgt_sectors"
+echo $(blueprint "Target bytes:") "$tgt_bytes"
+echo $(blueprint "Target size:") "$tgt_size" 
+if ((($LBASectors %64) == 0))
+then
+	blocksize=32768
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %32) == 0))
+then
+	blocksize=16384
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %16) == 0))
+then
+	blocksize=8192
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %8) == 0))
+then
+	blocksize=4096
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %4) == 0))
+then
+	blocksize=2048
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %2) == 0))
+then
+	blocksize=1024
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+else
+	blocksize=512
+	echo $(blueprint "Target blocksize:") $blocksize | tee -a $output_report
+fi
 echo
 }
 
@@ -221,9 +250,9 @@ echo
 echo -e "** Please enter the mount point of evidence drive (eg. sda): \c "
 read evid_dev
 echo -e "** Please enter the mount point of target drive (eg. sdb): \c "
-read target_dev
+read tgt_dev
 echo -e "** Please enter the mount point of backup drive (eg. sdc): \c "
-read backup_dev
+read bkp_dev
 }
 
 fn_encrypt() {
@@ -232,35 +261,64 @@ fn_encrypt() {
 
 
 fn_report_backup() {
-echo -e "** Please enter the mount point of backup drive (eg. sda, sdb, sdc): \c "
-read bkp_evid_dev
-
-bkp_evid_dev_model=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Model Number' | awk '{print $3" "$4" "$5" "$6}'`
-bkp_evid_dev_serial=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Serial Number' | awk '{print $3" "$4" "$5" "$6}'`
-bkp_evid_dev_firmware=`hdparm -I /dev/$evid_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
-bkp_LBASectors=`hdparm -g /dev/$evid_dev | awk -F'[=,]' '{print $4}'`
-bkp_evid_transport=`sudo hdparm -I /dev/$evid_dev | grep "Transport:" | awk -F "          " '{print $2}'`
-bkp_evid_sectors=`echo $LBASectors | awk '{print $1}'`
-bkp_evid_bytes=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep bytes | awk '{print $5}'`
-bkp_evid_size=`fdisk -l -u /dev/$evid_dev | grep Disk | grep $evid_dev | awk -F ',' '{ print $1}' | awk '{print $3$4}'`
-bkp_evid_part_count=`fdisk -l -u /dev/$evid_dev | grep $evid_dev | grep -v Disk | wc -l`
-bkp_evid_part1_field2=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $2}'`
-bkp_evid_part1_field3=`fdisk -l -u /dev/$evid_dev | grep -A1 Device | grep $evid_dev'1' | awk '{print $3}'`
-bkp_evid_part2_field2=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $2}'`
-bkp_evid_part2_field3=`fdisk -l -u /dev/$evid_dev | grep -A2 Device | grep $evid_dev'2' | awk '{print $3}'`
-bkp_trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
-
-#backup information
+bkp_dev_model=`/bin/udevadm info --name=/dev/$bkp_dev | egrep ID_MODEL | awk  -F'[=,]' '{print $2}' | sed -n 1p`
+bkp_dev_vendor=`/bin/udevadm info --name=/dev/$bkp_dev | egrep ID_VENDOR | awk  -F'[=,]' '{print $2}' | sed -n 1p`
+bkp_dev_serial=`/bin/udevadm info --name=/dev/$bkp_dev | egrep ID_SERIAL_SHORT | awk  -F'[=,]' '{print $2}'`
+bkp_dev_firmware=`hdparm -I /dev/$bkp_dev 2>/dev/null | grep -i 'Firmware Revision' | awk '{print $3" "$4" "$5" "$6}'`
+LBASectors=`hdparm -g /dev/$bkp_dev | awk -F'[=,]' '{print $4}'`
+bkp_transport=`/bin/udevadm info --name=/dev/$bkp_dev | egrep ID_BUS | awk  -F'[=,]' '{print $2}'`
+bkp_sectors=`echo $LBASectors | awk '{print $1}'`
+bkp_bytes=`fdisk -l -u /dev/$bkp_dev | grep $bkp_dev | grep bytes | awk '{print $5}'`
+bkp_size=`fdisk -l -u /dev/$bkp_dev | grep Disk | grep $bkp_dev | awk '{print $3$4}'`
+bkp_part_count=`fdisk -l -u /dev/$bkp_dev | grep $bkp_dev | grep -v Disk | wc -l`
+bkp_part1_field2=`fdisk -l -u /dev/$bkp_dev | grep -A1 Device | grep $bkp_dev'1' | awk '{print $2}'`
+bkp_part1_field3=`fdisk -l -u /dev/$bkp_dev | grep -A1 Device | grep $bkp_dev'1' | awk '{print $3}'`
+bkp_part2_field2=`fdisk -l -u /dev/$bkp_dev | grep -A2 Device | grep $bkp_dev'2' | awk '{print $2}'`
+bkp_part2_field3=`fdisk -l -u /dev/$bkp_dev | grep -A2 Device | grep $bkp_dev'2' | awk '{print $3}'`
+trim_status=`sudo systemctl status fstrim | grep Active | awk '{print $2}'`
+#Backup information
 echo "******************************************"
-echo "*        Backup Disk Information         *"
+echo "*          Backup Information            *"
 echo "******************************************"
 echo
-echo $(blueprint "Evidence mount point:") "/dev/$evid_dev" 
-echo $(blueprint "Evidence device model:") "$evid_dev_model" 
-echo $(blueprint "Evidence device serial:") "$evid_dev_serial" 
-echo $(blueprint "Evidence device firmware:") "$evid_dev_firmware" 
-echo $(blueprint "Evidence transport type:") "$evid_transport"
-echo $(blueprint "Evidence trim status:") "$trim_status"
+echo $(blueprint "Backup mount point:") "/dev/$bkp_dev" 
+echo $(blueprint "Backup device vendor:") "$bkp_dev_vendor" 
+echo $(blueprint "Backup device model:") "$bkp_dev_model" 
+echo $(blueprint "Backup device serial:") "$bkp_dev_serial" 
+echo $(blueprint "Backup device firmware:") "$bkp_dev_firmware" 
+echo $(blueprint "Backup transport type:") "$bkp_transport"
+echo $(blueprint "Backup trim status:") "$trim_status"
+echo $(blueprint "Backup sectors:") "$bkp_sectors"
+echo $(blueprint "Backup bytes:") "$bkp_bytes"
+echo $(blueprint "Backup size:") "$bkp_size" 
+if ((($LBASectors %64) == 0))
+then
+	blocksize=32768
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %32) == 0))
+then
+	blocksize=16384
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %16) == 0))
+then
+	blocksize=8192
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %8) == 0))
+then
+	blocksize=4096
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %4) == 0))
+then
+	blocksize=2048
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+elif ((($LBASectors %2) == 0))
+then
+	blocksize=1024
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+else
+	blocksize=512
+	echo $(blueprint "Backup blocksize:") $blocksize | tee -a $output_report
+fi
 echo
 }
 
@@ -271,12 +329,6 @@ fn_report_working() {
     echo
 }
 
-fn_report_target() {
-    echo
-}
-fn_report_backup() {
-    echo
-}
 fn_report_connected-devices() {
     echo
 }
